@@ -5,23 +5,32 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "stock-fetcher"
 version = "0.1.0"
-description = "A Python library for fetching copyright-free images from various sources like Pexels, Pixabay, Unsplash, and Flickr."
+description = "A professional, modular Python library for fetching copyright-free images."
 readme = "README.md"
-requires-python = ">=3.8"
-authors = [
-    { name = "Ata", email = "ata@example.com" }
-]
+requires-python = ">=3.10"
 dependencies = [
     "requests",
-    "Pillow",
+    "pydantic",
     "beautifulsoup4"
 ]
 
+[project.scripts]
+stock-fetcher = "stock_fetcher.cli.main:app"
+
 [project.optional-dependencies]
+cli = [
+    "typer",
+    "rich"
+]
+mcp = [
+    "mcp"
+]
+all = [
+    "typer",
+    "rich",
+    "mcp"
+]
 dev = [
     "pre-commit",
     "ruff"
 ]
-
-[project.urls]
-Homepage = "https://github.com/AtaCanYmc/stock-fetcher"

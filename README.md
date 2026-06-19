@@ -17,11 +17,28 @@ Built with a clean architecture and type hints, it makes retrieving high-quality
 
 ## Installation
 
-You can install the package directly from the source directory:
+You can install the core package directly from the source directory:
 
 ```bash
 pip install .
 ```
+
+### Optional Features (Extras)
+
+Stock Fetcher supports CLI and MCP integrations as optional features. You can install them by adding extras:
+
+- **CLI Support:** To use the command-line interface, install with `cli`:
+  ```bash
+  pip install '.[cli]'
+  ```
+- **MCP Server:** To expose this package as a tool for AI agents (like Claude), install with `mcp`:
+  ```bash
+  pip install '.[mcp]'
+  ```
+- **Install All:** To install both features at once:
+  ```bash
+  pip install '.[all]'
+  ```
 
 ## Quick Start
 
