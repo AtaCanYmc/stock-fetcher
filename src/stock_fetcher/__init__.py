@@ -6,8 +6,6 @@ from .exceptions import (
     AuthenticationError,
     ProviderNotFoundError,
 )
-from .cli import app as cli_app
-from .mcp import mcp
 
 __all__ = [
     "BaseFetcher",
@@ -16,6 +14,4 @@ __all__ = [
     "APIConnectionError",
     "AuthenticationError",
     "ProviderNotFoundError",
-    "cli_app",
-    "mcp",
 ]
