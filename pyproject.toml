@@ -17,5 +17,11 @@ dependencies = [
     "beautifulsoup4"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "ruff"
+]
+
 [project.urls]
 Homepage = "https://github.com/AtaCanYmc/stock-fetcher"
