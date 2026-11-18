@@ -155,10 +155,7 @@ import os
 from stock_fetcher import ClientFactory, StockFetcherError
 
 # 1. Initialize client via factory
-client = ClientFactory.get(
-    provider="pixabay",
-    api_key=os.getenv("PIXABAY_API_KEY", "")
-)
+client = ClientFactory.get(provider="pixabay", api_key=os.getenv("PIXABAY_API_KEY", ""))
 
 # 2. Execute search query (returns validated StockImage Pydantic models)
 try:
@@ -198,6 +195,7 @@ All clients implement the non-blocking `asearch()` coroutine powered by `httpx`.
 import asyncio
 from stock_fetcher import ClientFactory
 
+
 async def fetch_all_sources():
     # Concurrently dispatch requests across Flickr, Pixabay, Pexels, and Unsplash
     results = await ClientFactory.asearch_all(
@@ -210,6 +208,7 @@ async def fetch_all_sources():
         print(f"\n--- {provider.capitalize()} ({len(photos)} photos) ---")
         for pic in photos:
             print(f"[{pic.id}] {pic.title or 'Photo'} -> {pic.url_original}")
+
 
 asyncio.run(fetch_all_sources())
 ```

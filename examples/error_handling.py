@@ -1,5 +1,9 @@
-from stock_fetcher import ClientFactory
-from stock_fetcher import StockFetcherError, AuthenticationError, ProviderNotFoundError
+from stock_fetcher import (
+    AuthenticationError,
+    ClientFactory,
+    ProviderNotFoundError,
+    StockFetcherError,
+)
 
 
 def main():

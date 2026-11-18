@@ -1,6 +1,7 @@
 import asyncio
 import os
-from stock_fetcher import ClientFactory, MemoryCache, DiskCache, StockImage
+
+from stock_fetcher import ClientFactory, MemoryCache, StockImage
 
 
 async def main():
@@ -38,7 +39,9 @@ async def main():
     )
 
     for provider_name, provider_images in results_map.items():
-        print(f"\n--- Provider: {provider_name.capitalize()} ({len(provider_images)} results) ---")
+        print(
+            f"\n--- Provider: {provider_name.capitalize()} ({len(provider_images)} results) ---"
+        )
         for pic in provider_images:
             assert isinstance(pic, StockImage)
             print(f"  - [{pic.id}] {pic.url_page} -> {pic.url_original}")

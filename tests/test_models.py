@@ -1,4 +1,5 @@
 import unittest
+
 from stock_fetcher.models import StockImage
 
 

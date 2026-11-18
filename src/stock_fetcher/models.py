@@ -1,20 +1,41 @@
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 
 class StockImage(BaseModel):
     """Structured data model representing an image retrieved from a stock photo provider."""
 
-    id: str = Field(..., description="Unique photo identifier within provider namespace")
-    source: str = Field(..., description="Source provider identifier (e.g. 'pexels', 'pixabay')")
-    url_page: str = Field(..., description="Webpage URL of the photo on the provider platform")
-    url_original: str = Field(..., description="Direct URL to the original or high-resolution image file")
-    url_thumb: Optional[str] = Field(default=None, description="Direct URL to thumbnail preview")
-    title: Optional[str] = Field(default=None, description="Image title, description, or caption")
-    author: Optional[str] = Field(default=None, description="Photographer or creator username")
-    width: Optional[int] = Field(default=None, description="Original image width in pixels")
-    height: Optional[int] = Field(default=None, description="Original image height in pixels")
-    extra: Dict[str, Any] = Field(default_factory=dict, description="Raw provider metadata payload")
+    id: str = Field(
+        ..., description="Unique photo identifier within provider namespace"
+    )
+    source: str = Field(
+        ..., description="Source provider identifier (e.g. 'pexels', 'pixabay')"
+    )
+    url_page: str = Field(
+        ..., description="Webpage URL of the photo on the provider platform"
+    )
+    url_original: str = Field(
+        ..., description="Direct URL to the original or high-resolution image file"
+    )
+    url_thumb: Optional[str] = Field(
+        default=None, description="Direct URL to thumbnail preview"
+    )
+    title: Optional[str] = Field(
+        default=None, description="Image title, description, or caption"
+    )
+    author: Optional[str] = Field(
+        default=None, description="Photographer or creator username"
+    )
+    width: Optional[int] = Field(
+        default=None, description="Original image width in pixels"
+    )
+    height: Optional[int] = Field(
+        default=None, description="Original image height in pixels"
+    )
+    extra: Dict[str, Any] = Field(
+        default_factory=dict, description="Raw provider metadata payload"
+    )
 
     def __getitem__(self, item: str) -> Any:
         """Subscript access for backwards compatibility with dictionary interfaces."""

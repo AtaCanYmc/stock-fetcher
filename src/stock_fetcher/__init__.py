@@ -1,13 +1,13 @@
-from .models import StockImage
 from .base import BaseFetcher
-from .factory import ClientFactory
-from .cache import CacheConfig, BaseCache, MemoryCache, DiskCache
+from .cache import BaseCache, CacheConfig, DiskCache, MemoryCache
 from .exceptions import (
-    StockFetcherError,
     APIConnectionError,
     AuthenticationError,
     ProviderNotFoundError,
+    StockFetcherError,
 )
+from .factory import ClientFactory
+from .models import StockImage
 
 __version__ = "0.2.0"
 

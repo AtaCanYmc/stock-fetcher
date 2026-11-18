@@ -2,16 +2,26 @@ import sys
 from unittest.mock import MagicMock, patch
 
 # Ensure optional or uninstalled dependencies are mock-shimmed in bare environments
-for mod in ("requests", "typer", "rich", "rich.console", "rich.table", "rich.panel", "rich.progress", "bs4"):
+for mod in (
+    "requests",
+    "typer",
+    "rich",
+    "rich.console",
+    "rich.table",
+    "rich.panel",
+    "rich.progress",
+    "bs4",
+):
     if mod not in sys.modules:
         try:
             __import__(mod)
         except ModuleNotFoundError:
             sys.modules[mod] = MagicMock()
 
-import unittest
 import os
 import tempfile
+import unittest
+
 from stock_fetcher.base import BaseFetcher
 from stock_fetcher.cli.main import _download_single_image
 

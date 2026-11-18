@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 try:
     from mcp.server.fastmcp import FastMCP
@@ -8,8 +8,8 @@ except ModuleNotFoundError:
     print("Install via: pip install 'stock-fetcher[mcp]'", file=sys.stderr)
     sys.exit(1)
 
+from ..exceptions import ProviderNotFoundError, StockFetcherError
 from ..factory import ClientFactory
-from ..exceptions import StockFetcherError, ProviderNotFoundError
 
 mcp = FastMCP("stock_fetcher")
 
@@ -43,7 +43,9 @@ def search_images(provider: str, term: str, limit: int = 5, api_key: str = "") -
         if not images:
             return f"No images found for '{clean_term}' on {clean_provider}."
 
-        result = f"Found {len(images)} images for '{clean_term}' on {clean_provider}:\n\n"
+        result = (
+            f"Found {len(images)} images for '{clean_term}' on {clean_provider}:\n\n"
+        )
         for img in images:
             img_id = img.get("id", "N/A")
             img_url = img.get("url_original") or img.get("url") or "N/A"

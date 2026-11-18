@@ -1,4 +1,5 @@
 import os
+
 from stock_fetcher import ClientFactory
 
 

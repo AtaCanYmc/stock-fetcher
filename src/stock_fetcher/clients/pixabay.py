@@ -1,9 +1,11 @@
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 import httpx
+
 from ..base import BaseFetcher
-from ..models import StockImage
 from ..cache import BaseCache
 from ..exceptions import APIConnectionError, AuthenticationError
+from ..models import StockImage
 
 
 class PixabayClient(BaseFetcher):
@@ -74,10 +76,14 @@ class PixabayClient(BaseFetcher):
                     )
                 response.raise_for_status()
                 images = self._parse_payload(response.json())
-                self._save_cached_results(clean_term, safe_limit, images, response.headers)
+                self._save_cached_results(
+                    clean_term, safe_limit, images, response.headers
+                )
                 return images
         except httpx.HTTPError as e:
-            raise APIConnectionError(f"Failed to fetch from Pixabay: {self._mask_error(e)}")
+            raise APIConnectionError(
+                f"Failed to fetch from Pixabay: {self._mask_error(e)}"
+            )
 
     async def asearch(self, term: str, limit: int = 15) -> List[StockImage]:
         if not self.api_key:
@@ -104,7 +110,11 @@ class PixabayClient(BaseFetcher):
                     )
                 response.raise_for_status()
                 images = self._parse_payload(response.json())
-                self._save_cached_results(clean_term, safe_limit, images, response.headers)
+                self._save_cached_results(
+                    clean_term, safe_limit, images, response.headers
+                )
                 return images
         except httpx.HTTPError as e:
-            raise APIConnectionError(f"Failed to fetch from Pixabay: {self._mask_error(e)}")
+            raise APIConnectionError(
+                f"Failed to fetch from Pixabay: {self._mask_error(e)}"
+            )

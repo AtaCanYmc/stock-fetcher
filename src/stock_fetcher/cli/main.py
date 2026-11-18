@@ -1,35 +1,39 @@
-import sys
-import os
-import json
-import csv
 import asyncio
-from typing import Optional, List, Dict, Any
+import csv
+import json
+import os
+import sys
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
+
 import requests
 
 try:
     import typer
     from rich.console import Console
-    from rich.table import Table
     from rich.panel import Panel
     from rich.progress import (
+        BarColumn,
         Progress,
         SpinnerColumn,
-        TextColumn,
-        BarColumn,
         TaskProgressColumn,
+        TextColumn,
         TimeRemainingColumn,
     )
+    from rich.table import Table
 except ModuleNotFoundError:
-    print("Error: Required CLI dependencies ('typer', 'rich') are missing.", file=sys.stderr)
+    print(
+        "Error: Required CLI dependencies ('typer', 'rich') are missing.",
+        file=sys.stderr,
+    )
     print("Install the CLI extras by running:", file=sys.stderr)
     print("    pip install 'stock-fetcher[cli]'", file=sys.stderr)
     sys.exit(1)
 
+from ..cache import BaseCache, MemoryCache
+from ..exceptions import AuthenticationError, ProviderNotFoundError, StockFetcherError
 from ..factory import ClientFactory
 from ..models import StockImage
-from ..cache import MemoryCache, BaseCache
-from ..exceptions import StockFetcherError, AuthenticationError, ProviderNotFoundError
 
 __version__ = "0.2.0"
 MAX_DOWNLOAD_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB per image ceiling
@@ -73,7 +77,9 @@ def _download_single_image(
     """Download an image from a URL to disk with streaming, size bounds, and path traversal defense."""
     parsed = urlparse(url)
     if parsed.scheme.lower() not in ("http", "https"):
-        raise ValueError(f"Disallowed protocol scheme: '{parsed.scheme}'. Only HTTP and HTTPS are permitted.")
+        raise ValueError(
+            f"Disallowed protocol scheme: '{parsed.scheme}'. Only HTTP and HTTPS are permitted."
+        )
     if not parsed.netloc:
         raise ValueError("Invalid URL: missing host authority.")
 
@@ -81,7 +87,13 @@ def _download_single_image(
     canonical_dir = os.path.realpath(os.path.abspath(output_dir))
 
     raw_name = filename if filename else os.path.basename(parsed.path)
-    safe_name = os.path.basename(raw_name).replace("\\", "").replace("/", "").replace("\0", "").strip()
+    safe_name = (
+        os.path.basename(raw_name)
+        .replace("\\", "")
+        .replace("/", "")
+        .replace("\0", "")
+        .strip()
+    )
 
     if not safe_name or safe_name in (".", "..") or "." not in safe_name:
         safe_name = f"image_{abs(hash(url)) % 100000000}.jpg"
@@ -89,8 +101,13 @@ def _download_single_image(
     dest_path = os.path.join(canonical_dir, safe_name)
     canonical_dest = os.path.realpath(os.path.abspath(dest_path))
 
-    if not (canonical_dest == canonical_dir or canonical_dest.startswith(canonical_dir + os.sep)):
-        raise ValueError(f"Path traversal violation detected for destination: {filename}")
+    if not (
+        canonical_dest == canonical_dir
+        or canonical_dest.startswith(canonical_dir + os.sep)
+    ):
+        raise ValueError(
+            f"Path traversal violation detected for destination: {filename}"
+        )
 
     response = requests.get(url, stream=True, timeout=30)
     response.raise_for_status()
@@ -171,13 +188,15 @@ def _render_output(
         writer = csv.writer(sys.stdout)
         writer.writerow(["id", "source", "url_page", "url_original", "title"])
         for item in results:
-            writer.writerow([
-                item.get("id", ""),
-                item.get("source", ""),
-                item.get("url_page", ""),
-                item.get("url_original", ""),
-                item.get("title", ""),
-            ])
+            writer.writerow(
+                [
+                    item.get("id", ""),
+                    item.get("source", ""),
+                    item.get("url_page", ""),
+                    item.get("url_original", ""),
+                    item.get("title", ""),
+                ]
+            )
         return
 
     # Default: Rich Table
@@ -208,14 +227,17 @@ def _render_output(
 def _batch_download(results: List[Any], output_dir: str) -> None:
     """Download all images from search results with a progress bar."""
     valid_items = [
-        item for item in results
+        item
+        for item in results
         if item.get("url_original") and item.get("url_original") != "N/A"
     ]
     if not valid_items:
         console.print("[yellow]No direct download URLs found in results.[/yellow]")
         return
 
-    console.print(f"Downloading [bold cyan]{len(valid_items)}[/bold cyan] images to [bold]{output_dir}[/bold]...")
+    console.print(
+        f"Downloading [bold cyan]{len(valid_items)}[/bold cyan] images to [bold]{output_dir}[/bold]..."
+    )
 
     with Progress(
         SpinnerColumn(),
@@ -242,7 +264,9 @@ def _batch_download(results: List[Any], output_dir: str) -> None:
             finally:
                 progress.advance(overall)
 
-    console.print(f"[green]Download completed. Files saved to [bold]{output_dir}[/bold][/green]")
+    console.print(
+        f"[green]Download completed. Files saved to [bold]{output_dir}[/bold][/green]"
+    )
 
 
 @app.command(name="search")
@@ -312,22 +336,32 @@ def search(
             results.extend(p_images)
 
         if not results:
-            err_console.print(f"[yellow]No images retrieved for '{term}' from any provider.[/yellow]")
+            err_console.print(
+                f"[yellow]No images retrieved for '{term}' from any provider.[/yellow]"
+            )
             raise typer.Exit(code=0)
 
         label = "All Providers (Concurrent Async)"
     else:
         try:
-            results = _execute_search(provider_clean, term, limit, api_key, cache=cache_backend)
+            results = _execute_search(
+                provider_clean, term, limit, api_key, cache=cache_backend
+            )
         except AuthenticationError as e:
-            env_var = PROVIDER_ENV_MAP.get(provider_clean, f"{provider_clean.upper()}_API_KEY")
+            env_var = PROVIDER_ENV_MAP.get(
+                provider_clean, f"{provider_clean.upper()}_API_KEY"
+            )
             err_console.print(f"[red]Authentication Error:[/red] {e}")
             if env_var:
-                err_console.print(f"[yellow]Tip:[/yellow] Set the [bold]{env_var}[/bold] environment variable or pass [bold]--api-key[/bold].")
+                err_console.print(
+                    f"[yellow]Tip:[/yellow] Set the [bold]{env_var}[/bold] environment variable or pass [bold]--api-key[/bold]."
+                )
             raise typer.Exit(code=1)
         except ProviderNotFoundError as e:
             err_console.print(f"[red]Error:[/red] {e}")
-            err_console.print(f"[yellow]Available providers:[/yellow] {', '.join(ClientFactory._clients.keys())}, all")
+            err_console.print(
+                f"[yellow]Available providers:[/yellow] {', '.join(ClientFactory._clients.keys())}, all"
+            )
             raise typer.Exit(code=1)
         except StockFetcherError as e:
             err_console.print(f"[red]Fetch Error:[/red] {e}")
@@ -345,7 +379,9 @@ def search(
     _render_output(results, format, term, label)
 
     if skipped_providers and format == "table":
-        console.print(f"[dim]Notice: Skipped providers: {', '.join(skipped_providers)}[/dim]\n")
+        console.print(
+            f"[dim]Notice: Skipped providers: {', '.join(skipped_providers)}[/dim]\n"
+        )
 
     if download:
         _batch_download(results, output_dir)
@@ -438,7 +474,9 @@ def download_cmd(
                 task_id=task,
             )
         file_size = os.path.getsize(saved_path)
-        console.print(f"[green]Saved successfully:[/green] [bold]{saved_path}[/bold] ({file_size / 1024:.1f} KB)")
+        console.print(
+            f"[green]Saved successfully:[/green] [bold]{saved_path}[/bold] ({file_size / 1024:.1f} KB)"
+        )
     except Exception as exc:
         err_console.print(f"[red]Download failed:[/red] {exc}")
         raise typer.Exit(code=1)
@@ -504,13 +542,15 @@ def check_keys() -> None:
 @app.command(name="version")
 def version_cmd() -> None:
     """Display stock-fetcher version and runtime details."""
-    console.print(Panel(
-        f"[bold cyan]stock-fetcher[/bold cyan] version [bold green]{__version__}[/bold green]\n"
-        f"Python: {sys.version.split()[0]} ({sys.platform})\n"
-        f"Available Providers: {', '.join(ClientFactory._clients.keys())}",
-        title="Package Info",
-        expand=False,
-    ))
+    console.print(
+        Panel(
+            f"[bold cyan]stock-fetcher[/bold cyan] version [bold green]{__version__}[/bold green]\n"
+            f"Python: {sys.version.split()[0]} ({sys.platform})\n"
+            f"Available Providers: {', '.join(ClientFactory._clients.keys())}",
+            title="Package Info",
+            expand=False,
+        )
+    )
 
 
 if __name__ == "__main__":

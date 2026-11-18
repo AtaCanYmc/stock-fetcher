@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Optional, Any
-from .models import StockImage
+from typing import Any, List, Optional, Tuple
+
 from .cache import BaseCache, build_cache_key, parse_cache_control_ttl
+from .models import StockImage
 
 
 class BaseFetcher(ABC):
@@ -18,7 +19,9 @@ class BaseFetcher(ABC):
         pass
 
     @staticmethod
-    def sanitize_search_params(term: str, limit: int, max_limit: int = 100) -> Tuple[str, int]:
+    def sanitize_search_params(
+        term: str, limit: int, max_limit: int = 100
+    ) -> Tuple[str, int]:
         """Validate search query and enforce safe pagination bounds.
 
         Args:

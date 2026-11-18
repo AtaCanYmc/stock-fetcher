@@ -1,11 +1,13 @@
 import re
 from typing import List, Optional
+
 import httpx
 from bs4 import BeautifulSoup
+
 from ..base import BaseFetcher
-from ..models import StockImage
 from ..cache import BaseCache
 from ..exceptions import APIConnectionError
+from ..models import StockImage
 
 
 def _normalize_flickr_url(raw_url: str) -> str:
@@ -75,7 +77,9 @@ class FlickrClient(BaseFetcher):
                 response = client.get(self.base_url, params=params)
                 response.raise_for_status()
                 images = self._parse_html(response.text, safe_limit)
-                self._save_cached_results(clean_term, safe_limit, images, response.headers)
+                self._save_cached_results(
+                    clean_term, safe_limit, images, response.headers
+                )
                 return images
         except httpx.HTTPError as e:
             raise APIConnectionError(f"Failed to fetch from Flickr: {e}")
@@ -92,7 +96,9 @@ class FlickrClient(BaseFetcher):
                 response = await client.get(self.base_url, params=params)
                 response.raise_for_status()
                 images = self._parse_html(response.text, safe_limit)
-                self._save_cached_results(clean_term, safe_limit, images, response.headers)
+                self._save_cached_results(
+                    clean_term, safe_limit, images, response.headers
+                )
                 return images
         except httpx.HTTPError as e:
             raise APIConnectionError(f"Failed to fetch from Flickr: {e}")

@@ -1,12 +1,12 @@
-import os
-import json
-import time
 import hashlib
+import json
+import os
 import re
 import threading
+import time
 from abc import ABC, abstractmethod
-from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
 
 
 @dataclass
@@ -16,7 +16,9 @@ class CacheConfig:
     enabled: bool = True
     backend: str = "memory"  # 'memory' or 'disk'
     default_ttl: int = 3600  # Default 1 hour TTL
-    cache_dir: Optional[str] = None  # Defaults to ~/.cache/stock-fetcher if backend is 'disk'
+    cache_dir: Optional[str] = (
+        None  # Defaults to ~/.cache/stock-fetcher if backend is 'disk'
+    )
 
 
 class BaseCache(ABC):
@@ -28,7 +30,9 @@ class BaseCache(ABC):
         pass
 
     @abstractmethod
-    def set(self, key: str, data: List[Dict[str, Any]], ttl: Optional[int] = None) -> None:
+    def set(
+        self, key: str, data: List[Dict[str, Any]], ttl: Optional[int] = None
+    ) -> None:
         """Store records under the given key with an optional TTL in seconds."""
         pass
 
@@ -57,7 +61,9 @@ class MemoryCache(BaseCache):
                 return None
             return [dict(item) for item in data]
 
-    def set(self, key: str, data: List[Dict[str, Any]], ttl: Optional[int] = None) -> None:
+    def set(
+        self, key: str, data: List[Dict[str, Any]], ttl: Optional[int] = None
+    ) -> None:
         duration = ttl if (ttl is not None and ttl > 0) else self.default_ttl
         expires_at = time.time() + duration
         with self._lock:
@@ -104,7 +110,9 @@ class DiskCache(BaseCache):
             except (json.JSONDecodeError, OSError):
                 return None
 
-    def set(self, key: str, data: List[Dict[str, Any]], ttl: Optional[int] = None) -> None:
+    def set(
+        self, key: str, data: List[Dict[str, Any]], ttl: Optional[int] = None
+    ) -> None:
         duration = ttl if (ttl is not None and ttl > 0) else self.default_ttl
         expires_at = time.time() + duration
         payload = {

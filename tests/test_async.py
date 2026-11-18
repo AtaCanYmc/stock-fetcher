@@ -2,7 +2,17 @@ import sys
 from unittest.mock import MagicMock, patch
 
 # Mock dependencies if running in a bare test runner without installed extras
-for mod in ("httpx", "bs4", "requests", "typer", "rich", "rich.console", "rich.table", "rich.panel", "rich.progress"):
+for mod in (
+    "httpx",
+    "bs4",
+    "requests",
+    "typer",
+    "rich",
+    "rich.console",
+    "rich.table",
+    "rich.panel",
+    "rich.progress",
+):
     if mod not in sys.modules:
         try:
             __import__(mod)
@@ -10,9 +20,10 @@ for mod in ("httpx", "bs4", "requests", "typer", "rich", "rich.console", "rich.t
             sys.modules[mod] = MagicMock()
 
 import unittest
+
+from stock_fetcher.cache import MemoryCache
 from stock_fetcher.factory import ClientFactory
 from stock_fetcher.models import StockImage
-from stock_fetcher.cache import MemoryCache
 
 
 class AsyncClientTest(unittest.IsolatedAsyncioTestCase):
@@ -29,7 +40,9 @@ class AsyncClientTest(unittest.IsolatedAsyncioTestCase):
                     "photographer": "Jane Doe",
                     "width": 1920,
                     "height": 1080,
-                    "src": {"original": "https://images.pexels.com/photos/101/orig.jpg"},
+                    "src": {
+                        "original": "https://images.pexels.com/photos/101/orig.jpg"
+                    },
                 }
             ]
         }
@@ -43,7 +56,9 @@ class AsyncClientTest(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(item, StockImage)
         self.assertEqual(item.id, "101")
         self.assertEqual(item.author, "Jane Doe")
-        self.assertEqual(item.url_original, "https://images.pexels.com/photos/101/orig.jpg")
+        self.assertEqual(
+            item.url_original, "https://images.pexels.com/photos/101/orig.jpg"
+        )
 
     @patch("httpx.AsyncClient.get")
     async def test_concurrent_multi_provider_search(self, mock_get):

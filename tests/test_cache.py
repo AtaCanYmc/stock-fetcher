@@ -1,9 +1,10 @@
-import unittest
-import time
 import tempfile
+import time
+import unittest
+
 from stock_fetcher.cache import (
-    MemoryCache,
     DiskCache,
+    MemoryCache,
     build_cache_key,
     parse_cache_control_ttl,
 )
@@ -15,8 +16,13 @@ class CacheTest(unittest.TestCase):
         self.assertEqual(key, "pixabay:forest:5")
 
     def test_parse_cache_control_ttl(self):
-        self.assertEqual(parse_cache_control_ttl({"cache-control": "public, max-age=3600"}), 3600)
-        self.assertEqual(parse_cache_control_ttl({"Cache-Control": "max-age=120, must-revalidate"}), 120)
+        self.assertEqual(
+            parse_cache_control_ttl({"cache-control": "public, max-age=3600"}), 3600
+        )
+        self.assertEqual(
+            parse_cache_control_ttl({"Cache-Control": "max-age=120, must-revalidate"}),
+            120,
+        )
         self.assertEqual(parse_cache_control_ttl({"cache-control": "no-store"}), 0)
         self.assertIsNone(parse_cache_control_ttl({}))
 

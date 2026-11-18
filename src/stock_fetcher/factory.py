@@ -1,14 +1,15 @@
-import os
 import asyncio
-from typing import Dict, Type, Optional, List
+import os
+from typing import Dict, List, Optional, Type
+
 from .base import BaseFetcher
-from .models import StockImage
 from .cache import BaseCache
-from .exceptions import ProviderNotFoundError, AuthenticationError
+from .clients.flickr import FlickrClient
 from .clients.pexels import PexelsClient
 from .clients.pixabay import PixabayClient
 from .clients.unsplash import UnsplashClient
-from .clients.flickr import FlickrClient
+from .exceptions import AuthenticationError, ProviderNotFoundError
+from .models import StockImage
 
 
 class ClientFactory:
@@ -86,7 +87,9 @@ class ClientFactory:
             if p_clean not in cls._clients:
                 return p_clean, []
 
-            api_key = keys_map.get(p_clean) or os.getenv(cls._env_keys.get(p_clean, ""), "")
+            api_key = keys_map.get(p_clean) or os.getenv(
+                cls._env_keys.get(p_clean, ""), ""
+            )
             try:
                 client = cls.get(p_clean, api_key=api_key, cache=cache)
                 results = await client.asearch(term, limit=limit)
