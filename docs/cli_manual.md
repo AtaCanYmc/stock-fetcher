@@ -25,17 +25,17 @@ The `stock-fetcher` Command Line Interface provides direct terminal queries, out
 
 ### Method 1: Homebrew (Recommended on macOS & Linux)
 
-Install the standalone executable into your system path without manual virtual environment management:
+Install the standalone executable via the official tap:
 
 ```bash
-brew install AtaCanYmc/stock-fetcher/stock-fetcher
+brew tap AtaCanYmc/tap
+brew install stock-fetcher
 ```
 
-Or tap explicitly:
+Or install directly in one step:
 
 ```bash
-brew tap AtaCanYmc/stock-fetcher https://github.com/AtaCanYmc/stock-fetcher
-brew install stock-fetcher
+brew install AtaCanYmc/tap/stock-fetcher
 ```
 
 ### Method 2: Pip with CLI Extra
