@@ -92,36 +92,26 @@ feat(clients): add Flickr scrapper response parser validation
 
 ## Verification Commands
 
-Execute all linting, formatting, and build verifications prior to pushing commits:
+Execute all linting, formatting, and link verifications prior to pushing commits. You can run all checks via `make`:
+
+```bash
+make check
+```
+
+Or execute individual steps:
 
 ```bash
 # 1. Run Ruff linter
-ruff check .
+make lint
 
 # 2. Run Ruff format check
-ruff format --check .
+make format-check
 
-# 3. Verify distribution build
-python -m build
+# 3. Verify internal markdown links
+make validate-links
 
-# 4. Verify relative markdown links
-python3 -c '
-import re, glob, os, sys
-broken = []
-for f in glob.glob("**/*.md", recursive=True):
-    content = re.sub(r"```[\s\S]*?```", "", open(f, encoding="utf-8").read())
-    content = re.sub(r"`[^`]*`", "", content)
-    for link in re.findall(r"\[.*?\]\((?!https?://|mailto:)(.*?)(?:#.*)?\)", content):
-        link = link.strip().split("?")[0]
-        if not link or link.startswith("#"): continue
-        target = os.path.normpath(os.path.join(os.path.dirname(f), link))
-        if not os.path.exists(target):
-            broken.append(f"{f} -> {link}")
-if broken:
-    print("Broken links detected:", broken, file=sys.stderr)
-    sys.exit(1)
-print("Internal documentation links verified.")
-'
+# 4. Verify distribution build
+make build
 ```
 
 ---
