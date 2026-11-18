@@ -36,6 +36,8 @@ Unified Python client, CLI utility, and Model Context Protocol (MCP) server for 
 - [Supported Providers](#supported-providers)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Asynchronous & Concurrent Queries](#asynchronous--concurrent-queries)
+- [Response Caching](#response-caching)
 - [CLI Interface](#cli-interface)
 - [MCP Server for AI Agents](#mcp-server-for-ai-agents)
 - [Environment Configuration](#environment-configuration)
@@ -158,13 +160,16 @@ client = ClientFactory.get(
     api_key=os.getenv("PIXABAY_API_KEY", "")
 )
 
-# 2. Execute search query
+# 2. Execute search query (returns validated StockImage Pydantic models)
 try:
     images = client.search(term="alpine mountains", limit=3)
     for img in images:
-        print(f"[{img['source']}] ID: {img['id']}")
-        print(f"Original URL: {img['url_original']}")
-        print(f"Webpage URL:  {img['url_page']}\n")
+        # Access attributes directly or via backwards-compatible subscript
+        print(f"[{img.source.upper()}] ID: {img.id}")
+        print(f"Title:        {img.title}")
+        print(f"Author:       {img.author}")
+        print(f"Original URL: {img.url_original}")
+        print(f"Webpage URL:  {img.url_page}\n")
 except StockFetcherError as exc:
     print(f"Fetch failed: {exc}")
 ```
@@ -180,8 +185,54 @@ flickr = ClientFactory.get("flickr")
 images = flickr.search(term="classic vehicles", limit=2)
 
 for item in images:
-    print(f"Found: {item['title']} -> {item['url_original']}")
+    print(f"Found: {item.title} -> {item.url_original}")
 ```
+
+---
+
+## Asynchronous & Concurrent Queries
+
+All clients implement the non-blocking `asearch()` coroutine powered by `httpx`. Use `ClientFactory.asearch_all()` to query multiple providers in parallel via `asyncio.gather`:
+
+```python
+import asyncio
+from stock_fetcher import ClientFactory
+
+async def fetch_all_sources():
+    # Concurrently dispatch requests across Flickr, Pixabay, Pexels, and Unsplash
+    results = await ClientFactory.asearch_all(
+        term="aurora borealis",
+        limit=2,
+        providers=["flickr", "pixabay"],
+    )
+
+    for provider, photos in results.items():
+        print(f"\n--- {provider.capitalize()} ({len(photos)} photos) ---")
+        for pic in photos:
+            print(f"[{pic.id}] {pic.title or 'Photo'} -> {pic.url_original}")
+
+asyncio.run(fetch_all_sources())
+```
+
+---
+
+## Response Caching
+
+Reduce API quota consumption and accelerate repetitive queries by attaching a cache backend:
+
+```python
+from stock_fetcher import ClientFactory, MemoryCache, DiskCache
+
+# In-memory caching with 1-hour default TTL
+memory_cache = MemoryCache(default_ttl=3600)
+client = ClientFactory.get("pixabay", cache=memory_cache)
+
+# Persistent disk caching (~/.cache/stock-fetcher)
+disk_cache = DiskCache(cache_dir="./.custom_cache", default_ttl=7200)
+flickr = ClientFactory.get("flickr", cache=disk_cache)
+```
+
+The caching layer automatically inspects upstream `Cache-Control: max-age=N` headers and sets expiration dynamically.
 
 ---
 
@@ -310,7 +361,7 @@ The `stock-fetcher` codebase is licensed under the [Apache 2.0 License](LICENSE)
 The official Flickr API requires an approved developer key and consumer secret with active OAuth handshakes. The web scraper parses Creative Commons search result markup directly using `BeautifulSoup4`. This enables immediate zero-configuration queries without developer account registration.
 
 ### Are network calls asynchronous?
-In the current v0.2.x series, network requests execute synchronously via `requests`. Non-blocking asynchronous query pipelines powered by `httpx` are scheduled for the v0.3.0 milestone in [ROADMAP.md](ROADMAP.md).
+Yes. All clients support non-blocking asynchronous requests via `await client.asearch(...)` powered by `httpx`. In addition, `await ClientFactory.asearch_all(...)` executes concurrent queries across multiple providers in parallel using `asyncio.gather`. Synchronous `client.search(...)` remains fully supported.
 
 ### How does the CLI handle missing API keys?
 The CLI checks for the `--api-key` flag first. If omitted, it falls back to checking the matching environment variable (`<PROVIDER>_API_KEY`). If neither is present for a provider requiring authentication, the command terminates with an explicit authentication error message.

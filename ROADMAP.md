@@ -12,11 +12,11 @@ This document outlines planned technical milestones and architecture enhancement
 
 ---
 
-## v0.3.0: Performance and Async Architecture
+## v0.3.0: Performance and Async Architecture (Completed)
 
-- **Asynchronous Client Support**: Implement non-blocking HTTP fetching across all clients using `httpx` to enable concurrent multi-provider queries.
-- **Configurable Response Caching**: Add an optional in-memory and disk cache layer respecting upstream `Cache-Control` headers and TTL settings.
-- **Structured Pydantic Response Models**: Migrate raw dictionary returns to validated Pydantic models for explicit schema guarantees and editor autocomplete.
+- [x] **Asynchronous Client Support**: Implemented non-blocking HTTP fetching across all clients using `httpx` and `ClientFactory.asearch_all` for concurrent multi-provider queries.
+- [x] **Configurable Response Caching**: Added thread-safe `MemoryCache` and persistent `DiskCache` layers respecting upstream `Cache-Control` headers and TTL settings.
+- [x] **Structured Pydantic Response Models**: Replaced raw dictionaries with validated `StockImage` Pydantic models supporting both attribute access and backwards-compatible subscript indexing.
 
 ---
 

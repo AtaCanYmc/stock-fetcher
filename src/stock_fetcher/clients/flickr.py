@@ -1,8 +1,10 @@
 import re
-import requests
+from typing import List, Optional
+import httpx
 from bs4 import BeautifulSoup
-from typing import List, Any
 from ..base import BaseFetcher
+from ..models import StockImage
+from ..cache import BaseCache
 from ..exceptions import APIConnectionError
 
 
@@ -20,49 +22,77 @@ def _normalize_flickr_url(raw_url: str) -> str:
 class FlickrClient(BaseFetcher):
     """Client for scraping copyright-free images from Flickr."""
 
-    def __init__(self, api_key: str = ""):
-        super().__init__(api_key)
+    def __init__(self, api_key: str = "", cache: Optional[BaseCache] = None):
+        super().__init__(api_key=api_key, cache=cache)
         self.base_url = "https://www.flickr.com/search/"
         self.headers = {"User-Agent": "Mozilla/5.0 (compatible; StockFetcher/0.2.0)"}
 
-    def search(self, term: str, limit: int = 15) -> List[Any]:
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=50)
-        params = {"text": clean_term, "license": "4,5,6,9,10"}
+    @property
+    def name(self) -> str:
+        return "flickr"
 
-        try:
-            response = requests.get(
-                self.base_url, params=params, headers=self.headers, timeout=30
-            )
-            response.raise_for_status()
+    def _parse_html(self, html_text: str, limit: int) -> List[StockImage]:
+        soup = BeautifulSoup(html_text, "html.parser")
+        images: List[StockImage] = []
 
-            soup = BeautifulSoup(response.text, "html.parser")
-            images = []
+        for img in soup.find_all("img"):
+            src = img.get("src")
+            if not src:
+                continue
 
-            for img in soup.find_all("img"):
-                src = img.get("src")
-                if not src:
+            if "staticflickr.com" in src:
+                hi_res = re.sub(r"_[a-z]\.jpg", "_b.jpg", src)
+                img_id = hi_res.split("/")[-1].split("_")[0]
+
+                if any(existing.id == img_id for existing in images):
                     continue
 
-                if "staticflickr.com" in src:
-                    hi_res = re.sub(r"_[a-z]\.jpg", "_b.jpg", src)
-                    img_id = hi_res.split("/")[-1].split("_")[0]
-
-                    # Prevent duplicates
-                    if any(existing_img["id"] == img_id for existing_img in images):
-                        continue
-
-                    images.append(
-                        {
-                            "id": img_id,
-                            "source": "flickr",
-                            "url": _normalize_flickr_url(src),
-                            "url_original": _normalize_flickr_url(hi_res),
-                        }
+                images.append(
+                    StockImage(
+                        id=img_id,
+                        source="flickr",
+                        url_page=f"https://www.flickr.com/photo.gne?id={img_id}",
+                        url_original=_normalize_flickr_url(hi_res),
+                        url_thumb=_normalize_flickr_url(src),
+                        title=img.get("alt") or "",
                     )
+                )
 
-                    if len(images) >= safe_limit:
-                        break
+                if len(images) >= limit:
+                    break
 
-            return images
-        except requests.RequestException as e:
+        return images
+
+    def search(self, term: str, limit: int = 15) -> List[StockImage]:
+        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=50)
+        cached = self._get_cached_results(clean_term, safe_limit)
+        if cached is not None:
+            return cached
+
+        params = {"text": clean_term, "license": "4,5,6,9,10"}
+        try:
+            with httpx.Client(headers=self.headers, timeout=30.0) as client:
+                response = client.get(self.base_url, params=params)
+                response.raise_for_status()
+                images = self._parse_html(response.text, safe_limit)
+                self._save_cached_results(clean_term, safe_limit, images, response.headers)
+                return images
+        except httpx.HTTPError as e:
+            raise APIConnectionError(f"Failed to fetch from Flickr: {e}")
+
+    async def asearch(self, term: str, limit: int = 15) -> List[StockImage]:
+        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=50)
+        cached = self._get_cached_results(clean_term, safe_limit)
+        if cached is not None:
+            return cached
+
+        params = {"text": clean_term, "license": "4,5,6,9,10"}
+        try:
+            async with httpx.AsyncClient(headers=self.headers, timeout=30.0) as client:
+                response = await client.get(self.base_url, params=params)
+                response.raise_for_status()
+                images = self._parse_html(response.text, safe_limit)
+                self._save_cached_results(clean_term, safe_limit, images, response.headers)
+                return images
+        except httpx.HTTPError as e:
             raise APIConnectionError(f"Failed to fetch from Flickr: {e}")

@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import csv
+import asyncio
 from typing import Optional, List, Dict, Any
 from urllib.parse import urlparse
 import requests
@@ -26,6 +27,8 @@ except ModuleNotFoundError:
     sys.exit(1)
 
 from ..factory import ClientFactory
+from ..models import StockImage
+from ..cache import MemoryCache, BaseCache
 from ..exceptions import StockFetcherError, AuthenticationError, ProviderNotFoundError
 
 __version__ = "0.2.0"
@@ -68,19 +71,16 @@ def _download_single_image(
     task_id: Optional[Any] = None,
 ) -> str:
     """Download an image from a URL to disk with streaming, size bounds, and path traversal defense."""
-    # 1. Scheme and Host Validation
     parsed = urlparse(url)
     if parsed.scheme.lower() not in ("http", "https"):
         raise ValueError(f"Disallowed protocol scheme: '{parsed.scheme}'. Only HTTP and HTTPS are permitted.")
     if not parsed.netloc:
         raise ValueError("Invalid URL: missing host authority.")
 
-    # 2. Strict Filename Sanitization & Directory Traversal Defense
     os.makedirs(output_dir, exist_ok=True)
     canonical_dir = os.path.realpath(os.path.abspath(output_dir))
 
     raw_name = filename if filename else os.path.basename(parsed.path)
-    # Strip any directory separators, null bytes, and traversal components
     safe_name = os.path.basename(raw_name).replace("\\", "").replace("/", "").replace("\0", "").strip()
 
     if not safe_name or safe_name in (".", "..") or "." not in safe_name:
@@ -89,15 +89,12 @@ def _download_single_image(
     dest_path = os.path.join(canonical_dir, safe_name)
     canonical_dest = os.path.realpath(os.path.abspath(dest_path))
 
-    # Boundary check: ensure target stays strictly within canonical_dir
     if not (canonical_dest == canonical_dir or canonical_dest.startswith(canonical_dir + os.sep)):
         raise ValueError(f"Path traversal violation detected for destination: {filename}")
 
-    # 3. Request Execution with Size Guard
     response = requests.get(url, stream=True, timeout=30)
     response.raise_for_status()
 
-    # Verify Content-Length header if reported
     content_length = int(response.headers.get("content-length", 0))
     if content_length > MAX_DOWNLOAD_SIZE_BYTES:
         raise ValueError(
@@ -121,7 +118,6 @@ def _download_single_image(
                     if progress and task_id is not None:
                         progress.update(task_id, advance=len(chunk))
     except Exception:
-        # Clean up partial artifact on download failure
         if os.path.exists(canonical_dest):
             try:
                 os.remove(canonical_dest)
@@ -137,26 +133,16 @@ def _execute_search(
     term: str,
     limit: int,
     explicit_key: str = "",
-) -> List[Dict[str, Any]]:
+    cache: Optional[BaseCache] = None,
+) -> List[StockImage]:
     """Execute search against a single provider."""
     api_key = _resolve_api_key(provider_name, explicit_key)
-    client = ClientFactory.get(provider_name, api_key=api_key)
-    raw_results = client.search(term, limit=limit)
-
-    normalized: List[Dict[str, Any]] = []
-    for item in raw_results:
-        normalized.append({
-            "id": str(item.get("id", "N/A")),
-            "source": str(item.get("source", provider_name)),
-            "url_page": item.get("url") or item.get("url_page") or "N/A",
-            "url_original": item.get("url_original") or item.get("url") or "N/A",
-            "title": item.get("title") or item.get("description") or "",
-        })
-    return normalized
+    client = ClientFactory.get(provider_name, api_key=api_key, cache=cache)
+    return client.search(term, limit=limit)
 
 
 def _render_output(
-    results: List[Dict[str, Any]],
+    results: List[Any],
     format_type: str,
     term: str,
     provider_label: str,
@@ -165,7 +151,11 @@ def _render_output(
     format_lower = format_type.lower()
 
     if format_lower == "json":
-        print(json.dumps(results, indent=2, ensure_ascii=False))
+        serialized = [
+            item.to_dict() if hasattr(item, "to_dict") else dict(item)
+            for item in results
+        ]
+        print(json.dumps(serialized, indent=2, ensure_ascii=False))
         return
 
     if format_lower == "urls":
@@ -205,17 +195,17 @@ def _render_output(
     for idx, item in enumerate(results, start=1):
         table.add_row(
             str(idx),
-            item.get("source", "").upper(),
-            item.get("id", ""),
-            item.get("url_page", ""),
-            item.get("url_original", ""),
+            str(item.get("source", "")).upper(),
+            str(item.get("id", "")),
+            str(item.get("url_page", "")),
+            str(item.get("url_original", "")),
         )
 
     console.print(table)
     console.print(f"[dim]Total records: {len(results)}[/dim]\n")
 
 
-def _batch_download(results: List[Dict[str, Any]], output_dir: str) -> None:
+def _batch_download(results: List[Any], output_dir: str) -> None:
     """Download all images from search results with a progress bar."""
     valid_items = [
         item for item in results
@@ -297,33 +287,38 @@ def search(
         "-o",
         help="Destination directory when downloading images.",
     ),
+    cache: bool = typer.Option(
+        True,
+        "--cache/--no-cache",
+        help="Enable response caching.",
+    ),
 ) -> None:
     """Search for copyright-free stock photos across providers."""
     provider_clean = provider.strip().lower()
-    results: List[Dict[str, Any]] = []
+    results: List[Any] = []
     skipped_providers: List[str] = []
+    cache_backend = MemoryCache(default_ttl=3600) if cache else None
 
     if provider_clean == "all":
-        available = list(ClientFactory._clients.keys())
-        for p in available:
-            try:
-                p_results = _execute_search(p, term, limit, api_key)
-                results.extend(p_results)
-            except AuthenticationError:
-                skipped_providers.append(f"{p} (API key missing)")
-            except Exception as exc:
-                skipped_providers.append(f"{p} ({exc})")
+        # Concurrently query all providers via asyncio.gather
+        results_map = asyncio.run(
+            ClientFactory.asearch_all(
+                term=term,
+                limit=limit,
+                cache=cache_backend,
+            )
+        )
+        for p_name, p_images in results_map.items():
+            results.extend(p_images)
 
         if not results:
             err_console.print(f"[yellow]No images retrieved for '{term}' from any provider.[/yellow]")
-            if skipped_providers:
-                err_console.print(f"[dim]Skipped providers: {', '.join(skipped_providers)}[/dim]")
             raise typer.Exit(code=0)
 
-        label = "All Providers"
+        label = "All Providers (Concurrent Async)"
     else:
         try:
-            results = _execute_search(provider_clean, term, limit, api_key)
+            results = _execute_search(provider_clean, term, limit, api_key, cache=cache_backend)
         except AuthenticationError as e:
             env_var = PROVIDER_ENV_MAP.get(provider_clean, f"{provider_clean.upper()}_API_KEY")
             err_console.print(f"[red]Authentication Error:[/red] {e}")
@@ -360,7 +355,7 @@ def search(
 def find(
     term: str = typer.Argument(
         ...,
-        help="Search query term across all available providers.",
+        help="Search query term across all available providers concurrently.",
     ),
     limit: int = typer.Option(
         5,
@@ -386,8 +381,13 @@ def find(
         "-o",
         help="Destination directory when downloading images.",
     ),
+    cache: bool = typer.Option(
+        True,
+        "--cache/--no-cache",
+        help="Enable response caching.",
+    ),
 ) -> None:
-    """Convenient shortcut to search all providers simultaneously."""
+    """Convenient shortcut to concurrently search all providers."""
     search(
         provider="all",
         term=term,
@@ -396,6 +396,7 @@ def find(
         format=format,
         download=download,
         output_dir=output_dir,
+        cache=cache,
     )
 
 
