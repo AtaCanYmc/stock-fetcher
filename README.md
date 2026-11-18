@@ -95,7 +95,20 @@ flowchart TD
 
 ## Installation
 
-### Core Package
+### Homebrew (macOS & Linux)
+
+Install the standalone CLI directly via Homebrew without managing Python virtual environments:
+
+```bash
+# Install directly from the repository tap
+brew install AtaCanYmc/stock-fetcher/stock-fetcher
+
+# Or tap first, then install
+brew tap AtaCanYmc/stock-fetcher https://github.com/AtaCanYmc/stock-fetcher
+brew install stock-fetcher
+```
+
+### Pip Package
 
 Install the base library for programmatic Python access:
 

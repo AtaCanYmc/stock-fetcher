@@ -23,7 +23,24 @@ The `stock-fetcher` Command Line Interface provides direct terminal queries, out
 
 ## Installation
 
-Install the package with the `cli` optional extra:
+### Method 1: Homebrew (Recommended on macOS & Linux)
+
+Install the standalone executable into your system path without manual virtual environment management:
+
+```bash
+brew install AtaCanYmc/stock-fetcher/stock-fetcher
+```
+
+Or tap explicitly:
+
+```bash
+brew tap AtaCanYmc/stock-fetcher https://github.com/AtaCanYmc/stock-fetcher
+brew install stock-fetcher
+```
+
+### Method 2: Pip with CLI Extra
+
+Install into your active Python environment:
 
 ```bash
 pip install "stock-fetcher[cli]"
