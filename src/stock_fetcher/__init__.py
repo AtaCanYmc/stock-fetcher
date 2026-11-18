@@ -9,7 +9,7 @@ from .exceptions import (
 from .factory import ClientFactory
 from .models import StockImage
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "StockImage",
