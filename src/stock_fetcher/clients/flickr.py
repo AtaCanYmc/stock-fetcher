@@ -6,14 +6,28 @@ from ..base import BaseFetcher
 from ..exceptions import APIConnectionError
 
 
+def _normalize_flickr_url(raw_url: str) -> str:
+    """Ensure Flickr image URLs have a valid https scheme."""
+    if not raw_url:
+        return ""
+    if raw_url.startswith("//"):
+        return f"https:{raw_url}"
+    if raw_url.startswith("http://") or raw_url.startswith("https://"):
+        return raw_url
+    return f"https://{raw_url.lstrip('/')}"
+
+
 class FlickrClient(BaseFetcher):
+    """Client for scraping copyright-free images from Flickr."""
+
     def __init__(self, api_key: str = ""):
         super().__init__(api_key)
         self.base_url = "https://www.flickr.com/search/"
-        self.headers = {"User-Agent": "Mozilla/5.0"}
+        self.headers = {"User-Agent": "Mozilla/5.0 (compatible; StockFetcher/0.2.0)"}
 
     def search(self, term: str, limit: int = 15) -> List[Any]:
-        params = {"text": term, "license": "4,5,6,9,10"}
+        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=50)
+        params = {"text": clean_term, "license": "4,5,6,9,10"}
 
         try:
             response = requests.get(
@@ -41,12 +55,12 @@ class FlickrClient(BaseFetcher):
                         {
                             "id": img_id,
                             "source": "flickr",
-                            "url": f"https:{src}",
-                            "url_original": f"https:{hi_res}",
+                            "url": _normalize_flickr_url(src),
+                            "url_original": _normalize_flickr_url(hi_res),
                         }
                     )
 
-                    if len(images) >= limit:
+                    if len(images) >= safe_limit:
                         break
 
             return images

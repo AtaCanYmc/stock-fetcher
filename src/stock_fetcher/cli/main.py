@@ -26,9 +26,10 @@ except ModuleNotFoundError:
     sys.exit(1)
 
 from ..factory import ClientFactory
-from ..exceptions import StockFetcherError, AuthenticationError, APIConnectionError, ProviderNotFoundError
+from ..exceptions import StockFetcherError, AuthenticationError, ProviderNotFoundError
 
 __version__ = "0.2.0"
+MAX_DOWNLOAD_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB per image ceiling
 
 app = typer.Typer(
     name="stock-fetcher",
@@ -50,13 +51,13 @@ PROVIDER_ENV_MAP: Dict[str, Optional[str]] = {
 def _resolve_api_key(provider: str, explicit_key: str = "") -> str:
     """Resolve API key from explicit option, provider env var, or global env var."""
     if explicit_key:
-        return explicit_key
+        return explicit_key.strip()
     env_var = PROVIDER_ENV_MAP.get(provider.lower())
     if env_var:
         val = os.getenv(env_var, "")
         if val:
-            return val
-    return os.getenv("STOCK_FETCHER_API_KEY", "")
+            return val.strip()
+    return os.getenv("STOCK_FETCHER_API_KEY", "").strip()
 
 
 def _download_single_image(
@@ -66,34 +67,69 @@ def _download_single_image(
     progress: Optional[Progress] = None,
     task_id: Optional[Any] = None,
 ) -> str:
-    """Download an image from a URL to disk with streaming chunks."""
+    """Download an image from a URL to disk with streaming, size bounds, and path traversal defense."""
+    # 1. Scheme and Host Validation
+    parsed = urlparse(url)
+    if parsed.scheme.lower() not in ("http", "https"):
+        raise ValueError(f"Disallowed protocol scheme: '{parsed.scheme}'. Only HTTP and HTTPS are permitted.")
+    if not parsed.netloc:
+        raise ValueError("Invalid URL: missing host authority.")
+
+    # 2. Strict Filename Sanitization & Directory Traversal Defense
     os.makedirs(output_dir, exist_ok=True)
+    canonical_dir = os.path.realpath(os.path.abspath(output_dir))
 
-    if not filename:
-        parsed = urlparse(url)
-        path_segment = os.path.basename(parsed.path)
-        if not path_segment or "." not in path_segment:
-            filename = f"image_{abs(hash(url)) % 100000000}.jpg"
-        else:
-            filename = path_segment
+    raw_name = filename if filename else os.path.basename(parsed.path)
+    # Strip any directory separators, null bytes, and traversal components
+    safe_name = os.path.basename(raw_name).replace("\\", "").replace("/", "").replace("\0", "").strip()
 
-    dest_path = os.path.join(output_dir, filename)
+    if not safe_name or safe_name in (".", "..") or "." not in safe_name:
+        safe_name = f"image_{abs(hash(url)) % 100000000}.jpg"
 
+    dest_path = os.path.join(canonical_dir, safe_name)
+    canonical_dest = os.path.realpath(os.path.abspath(dest_path))
+
+    # Boundary check: ensure target stays strictly within canonical_dir
+    if not (canonical_dest == canonical_dir or canonical_dest.startswith(canonical_dir + os.sep)):
+        raise ValueError(f"Path traversal violation detected for destination: {filename}")
+
+    # 3. Request Execution with Size Guard
     response = requests.get(url, stream=True, timeout=30)
     response.raise_for_status()
 
-    total_size = int(response.headers.get("content-length", 0))
-    if progress and task_id is not None and total_size > 0:
-        progress.update(task_id, total=total_size)
+    # Verify Content-Length header if reported
+    content_length = int(response.headers.get("content-length", 0))
+    if content_length > MAX_DOWNLOAD_SIZE_BYTES:
+        raise ValueError(
+            f"Image size exceeds maximum permitted limit ({content_length} > {MAX_DOWNLOAD_SIZE_BYTES} bytes)."
+        )
 
-    with open(dest_path, "wb") as f:
-        for chunk in response.iter_content(chunk_size=16384):
-            if chunk:
-                f.write(chunk)
-                if progress and task_id is not None:
-                    progress.update(task_id, advance=len(chunk))
+    if progress and task_id is not None and content_length > 0:
+        progress.update(task_id, total=content_length)
 
-    return dest_path
+    downloaded = 0
+    try:
+        with open(canonical_dest, "wb") as f:
+            for chunk in response.iter_content(chunk_size=16384):
+                if chunk:
+                    downloaded += len(chunk)
+                    if downloaded > MAX_DOWNLOAD_SIZE_BYTES:
+                        raise ValueError(
+                            f"Downloaded content exceeded {MAX_DOWNLOAD_SIZE_BYTES // (1024 * 1024)} MB limit."
+                        )
+                    f.write(chunk)
+                    if progress and task_id is not None:
+                        progress.update(task_id, advance=len(chunk))
+    except Exception:
+        # Clean up partial artifact on download failure
+        if os.path.exists(canonical_dest):
+            try:
+                os.remove(canonical_dest)
+            except OSError:
+                pass
+        raise
+
+    return canonical_dest
 
 
 def _execute_search(
@@ -300,6 +336,9 @@ def search(
             raise typer.Exit(code=1)
         except StockFetcherError as e:
             err_console.print(f"[red]Fetch Error:[/red] {e}")
+            raise typer.Exit(code=1)
+        except ValueError as e:
+            err_console.print(f"[red]Validation Error:[/red] {e}")
             raise typer.Exit(code=1)
 
         label = provider_clean.capitalize()

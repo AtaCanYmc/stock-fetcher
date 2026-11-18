@@ -1,4 +1,4 @@
-.PHONY: help install install-dev lint lint-fix format format-check build clean check validate-links
+.PHONY: help install install-dev lint lint-fix format format-check build test clean check validate-links
 
 PYTHON ?= python3
 
@@ -61,7 +61,10 @@ build:
 validate-links:
 	@$(PYTHON) -c "$$VALIDATE_LINKS_PY"
 
-check: lint format-check validate-links
+test:
+	$(PYTHON) -m unittest discover -s tests -v
+
+check: lint format-check test validate-links
 
 clean:
 	rm -rf build/ dist/ src/*.egg-info *.egg-info .pytest_cache .ruff_cache

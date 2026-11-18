@@ -5,6 +5,8 @@ from ..exceptions import APIConnectionError, AuthenticationError
 
 
 class UnsplashClient(BaseFetcher):
+    """Client for fetching copyright-free images from Unsplash."""
+
     def __init__(self, api_key: str = ""):
         super().__init__(api_key)
         self.base_url = "https://api.unsplash.com"
@@ -13,10 +15,12 @@ class UnsplashClient(BaseFetcher):
         if not self.api_key:
             raise AuthenticationError("Unsplash requires an API key (client_id).")
 
+        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=30)
+
         url = f"{self.base_url}/search/photos"
         params = {
-            "query": term,
-            "per_page": limit,
+            "query": clean_term,
+            "per_page": safe_limit,
             "client_id": self.api_key,
             "order_by": "relevant",
         }
@@ -25,21 +29,26 @@ class UnsplashClient(BaseFetcher):
             response = requests.get(url, params=params, timeout=30)
             if response.status_code in (401, 403):
                 raise AuthenticationError(
-                    f"Authentication failed: {response.status_code}"
+                    f"Authentication failed with status code {response.status_code}."
                 )
             response.raise_for_status()
 
             data = response.json()
             results = []
             for item in data.get("results", []):
+                links_dict = item.get("links", {})
+                urls_dict = item.get("urls", {})
                 results.append(
                     {
-                        "id": str(item["id"]),
+                        "id": str(item.get("id", "")),
                         "source": "unsplash",
-                        "url": item["links"]["html"],
-                        "url_original": item["urls"]["raw"],
+                        "url": links_dict.get("html", ""),
+                        "url_original": urls_dict.get("raw", ""),
                     }
                 )
             return results
         except requests.RequestException as e:
-            raise APIConnectionError(f"Failed to fetch from Unsplash: {e}")
+            err_msg = str(e)
+            if self.api_key and self.api_key in err_msg:
+                err_msg = err_msg.replace(self.api_key, "***")
+            raise APIConnectionError(f"Failed to fetch from Unsplash: {err_msg}")
