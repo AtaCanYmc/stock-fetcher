@@ -2,18 +2,22 @@
 
 # stock-fetcher CLI Manual
 
-The `stock-fetcher` Command Line Interface provides direct terminal queries for stock photography providers. Results render in formatted terminal tables via Rich.
+The `stock-fetcher` Command Line Interface provides direct terminal queries, output piping, batch downloads, and provider diagnostics rendered via Rich.
 
 ---
 
 ## Table of Contents
 
 - [Installation](#installation)
-- [Command Syntax](#command-syntax)
-- [Positional Arguments](#positional-arguments)
-- [Options & Flags](#options--flags)
+- [Command Overview](#command-overview)
+- [`search` Command](#search-command)
+- [`find` Command](#find-command)
+- [`download` Command](#download-command)
+- [`providers` Command](#providers-command)
+- [`keys` Command](#keys-command)
+- [`version` Command](#version-command)
 - [Environment Configuration](#environment-configuration)
-- [Execution Examples](#execution-examples)
+- [Shell Pipeline Recipes](#shell-pipeline-recipes)
 
 ---
 
@@ -27,30 +31,89 @@ pip install "stock-fetcher[cli]"
 
 ---
 
-## Command Syntax
+## Command Overview
+
+| Command | Description |
+| :--- | :--- |
+| `stock-fetcher search PROVIDER TERM` | Query a specific provider or `all` providers. |
+| `stock-fetcher find TERM` | Shorthand to query all providers simultaneously. |
+| `stock-fetcher download URL` | Download an image by direct URL to disk. |
+| `stock-fetcher providers` | Display supported providers, access modes, and readiness status. |
+| `stock-fetcher keys` | Inspect environment API key configuration. |
+| `stock-fetcher version` | Print version and platform details. |
+
+---
+
+## `search` Command
 
 ```bash
 stock-fetcher search [OPTIONS] PROVIDER TERM
 ```
 
----
+### Arguments
 
-## Positional Arguments
+| Argument | Choices | Description |
+| :--- | :--- | :--- |
+| `PROVIDER` | `pixabay`, `pexels`, `unsplash`, `flickr`, `all` | Target provider or `all`. |
+| `TERM` | String | Search query term (e.g. `"mountain lake"`). |
 
-| Argument | Type | Choices | Description |
-| :--- | :--- | :--- | :--- |
-| `PROVIDER` | String | `pexels`, `pixabay`, `unsplash`, `flickr` | Target stock photography provider. |
-| `TERM` | String | Any text | Query term (e.g. `"mountain lake"`, `"cyberpunk architecture"`). |
-
----
-
-## Options & Flags
+### Options & Flags
 
 | Flag | Short | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `--limit` | None | `5` | Maximum number of image records to retrieve. |
-| `--api-key` | None | None | Explicit provider authentication token. Overrides environment variables. |
-| `--help` | `-h` | None | Display command help and exit. |
+| `--limit` | `-l` | `5` | Maximum images to fetch per provider. |
+| `--api-key` | `-k` | None | Explicit provider authentication token. |
+| `--format` | `-f` | `table` | Output format: `table`, `json`, `csv`, or `urls`. |
+| `--download` | `-d` | `false` | Automatically download fetched images to disk. |
+| `--output-dir` | `-o` | `./downloads` | Destination folder when downloading. |
+
+---
+
+## `find` Command
+
+Convenient shorthand equivalent to `stock-fetcher search all TERM`.
+
+```bash
+stock-fetcher find "cyberpunk neon city" --limit 3 -f table
+```
+
+---
+
+## `download` Command
+
+Downloads a single file from a direct image URL with a real-time progress bar.
+
+```bash
+stock-fetcher download "https://images.pexels.com/photos/123/original.jpg" -o ./wallpapers -n custom.jpg
+```
+
+---
+
+## `providers` Command
+
+Lists all available providers and their current readiness status:
+
+```bash
+stock-fetcher providers
+```
+
+---
+
+## `keys` Command
+
+Inspects API key presence in the environment (`PIXABAY_API_KEY`, `PEXELS_API_KEY`, `UNSPLASH_API_KEY`):
+
+```bash
+stock-fetcher keys
+```
+
+---
+
+## `version` Command
+
+```bash
+stock-fetcher version
+```
 
 ---
 
@@ -67,23 +130,22 @@ When `--api-key` is omitted, the CLI reads provider credentials from environment
 
 ---
 
-## Execution Examples
+## Shell Pipeline Recipes
 
-### Search Pixabay with Explicit API Key
+### 1. Pipe Direct URLs to `curl`
 
 ```bash
-stock-fetcher search pixabay "alpine forest" --limit 3 --api-key "YOUR_KEY"
+stock-fetcher search flickr "vintage cars" -l 3 -f urls | xargs -n 1 curl -O
 ```
 
-### Search Flickr Without Credentials
+### 2. Parse Results with `jq`
 
 ```bash
-stock-fetcher search flickr "classic aircraft" --limit 5
+stock-fetcher search pixabay "aurora borealis" -f json | jq '.[].url_original'
 ```
 
-### Search Pexels Using Environment Variable
+### 3. Search and Download in One Command
 
 ```bash
-export PEXELS_API_KEY="YOUR_KEY"
-stock-fetcher search pexels "deep space" --limit 4
+stock-fetcher find "deep forest" -l 2 -d -o ./nature_photos
 ```

@@ -1,22 +1,29 @@
 #!/bin/bash
 
 # ============================================================================
-# Stock Fetcher CLI Usage Example
+# Stock Fetcher CLI Usage Examples
 #
-# Make sure you have installed the CLI extras:
+# Ensure you have installed the CLI extras:
 # pip install -e ".[cli]"
 # ============================================================================
 
-echo "=== Searching on Flickr (No API Key Required) ==="
-# Search for 3 images of 'cyberpunk city' using Flickr
+echo "=== 1. Checking Provider and Key Status ==="
+stock-fetcher providers
+stock-fetcher keys
+
+echo ""
+echo "=== 2. Searching on Flickr (No API Key Required) ==="
 stock-fetcher search flickr "cyberpunk city" --limit 3
 
 echo ""
-echo "=== Searching on Pixabay (Requires API Key) ==="
-# You can pass the API key via environment variable:
-# export PIXABAY_API_KEY="your_key"
-# Or via the --api-key flag:
-# stock-fetcher search pixabay "nature" --limit 2 --api-key "your_key"
-echo "(Uncomment the lines in the script to test Pixabay)"
+echo "=== 3. Exporting Direct URLs (Format: urls) ==="
+stock-fetcher search flickr "vintage cars" --limit 2 -f urls
 
-# stock-fetcher search pixabay "nature" --limit 2
+echo ""
+echo "=== 4. Searching Across All Providers with JSON Output ==="
+# In 'all' mode, providers with missing keys are automatically skipped without crashing
+stock-fetcher find "mountains" --limit 2 -f json
+
+echo ""
+echo "=== 5. Search and Download Images Directly to Disk ==="
+# stock-fetcher search flickr "alpine lake" --limit 2 -d -o ./downloaded_images
