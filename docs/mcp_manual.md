@@ -1,55 +1,63 @@
-# Stock Fetcher MCP Manual
+[← Back to Root Repository](../README.md)
 
-The Model Context Protocol (MCP) server allows AI agents (like Claude Desktop) to use Stock Fetcher as an external tool to search for images on your behalf.
+# stock-fetcher MCP Manual
+
+The Model Context Protocol (MCP) server enables AI agents to query `stock-fetcher` tools over standard input/output (stdio) streams.
+
+---
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Protocol Specification](#protocol-specification)
+- [Tool Definitions](#tool-definitions)
+- [Claude Desktop Integration](#claude-desktop-integration)
+- [Google Antigravity Integration](#google-antigravity-integration)
+- [Manual Server Execution](#manual-server-execution)
+
+---
 
 ## Installation
 
-Ensure you install the package with the `mcp` extra:
+Install the package with the `mcp` optional extra:
 
 ```bash
-pip install 'stock-fetcher[mcp]'
+pip install "stock-fetcher[mcp]"
 ```
 
-## How It Works
+---
 
-MCP uses standard input/output (stdio) to communicate. The `mcp_server.py` module exposes a single tool called `search_images`. When an AI agent needs to find a picture, it sends a JSON-RPC request to this server, which executes the search using the specified provider and returns the image URLs back to the AI.
+## Protocol Specification
 
-## Claude Desktop Configuration
+The server runs as an independent child process communicating via stdio JSON-RPC messages. Host agents dispatch structured tool calls and receive JSON image arrays containing `id`, `source`, `url_original`, `url_thumb`, and `url_page`.
 
-To integrate this tool with Claude Desktop, you need to add it to your configuration file.
+---
 
-### Location of `claude_desktop_config.json`
+## Tool Definitions
+
+The server registers one primary tool:
+
+### `search_images`
+
+Searches for copyright-free images using the specified provider.
+
+| Parameter | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `term` | String | Yes | None | Image search query. |
+| `provider` | String | No | `"pixabay"` | Provider name: `pixabay`, `pexels`, `unsplash`, `flickr`. |
+| `limit` | Integer | No | `5` | Maximum number of results to return. |
+
+---
+
+## Claude Desktop Integration
+
+Locate your Claude Desktop configuration file:
+
 - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
 
-### Configuration Snippet
-
-Add the following configuration block to the file:
-
-```json
-{
-  "mcpServers": {
-    "stock_fetcher": {
-      "command": "python",
-      "args": ["-m", "stock_fetcher.mcp.server"],
-      "env": {
-        "PEXELS_API_KEY": "your_pexels_key_here",
-        "PIXABAY_API_KEY": "your_pixabay_key_here",
-        "UNSPLASH_API_KEY": "your_unsplash_key_here"
-      }
-    }
-  }
-}
-```
-
-*Make sure your Python path in the `command` variable is accessible by Claude, or provide the absolute path to your `.venv/bin/python` if you are using a virtual environment.*
-
-Once configured, restart Claude Desktop. You can now ask Claude questions like:
-> *"Find me 3 pictures of a futuristic city using Pixabay."*
-
-## Antigravity Configuration
-
-Antigravity natively supports connecting to external MCP tools. To use Stock Fetcher as a tool within Antigravity, add the server configuration to your Antigravity MCP settings file (typically formatted the same way):
+Add the server definition under `mcpServers`:
 
 ```json
 {
@@ -58,23 +66,47 @@ Antigravity natively supports connecting to external MCP tools. To use Stock Fet
       "command": "python",
       "args": ["-m", "stock_fetcher.mcp.server"],
       "env": {
-        "PEXELS_API_KEY": "your_pexels_key_here",
-        "PIXABAY_API_KEY": "your_pixabay_key_here",
-        "UNSPLASH_API_KEY": "your_unsplash_key_here"
+        "PEXELS_API_KEY": "YOUR_PEXELS_KEY",
+        "PIXABAY_API_KEY": "YOUR_PIXABAY_KEY",
+        "UNSPLASH_API_KEY": "YOUR_UNSPLASH_KEY"
       }
     }
   }
 }
 ```
 
-Once configured, Antigravity will automatically discover the `search_images` tool. You can simply ask Antigravity:
-> *"Pixabay üzerinden bana 2 tane doğa manzarası bulup linklerini verir misin?"*
+Restart Claude Desktop to activate tool registration.
 
-## Running the Server Manually
+---
 
-While the MCP server is designed to be run by a client application, you can start the process manually:
+## Google Antigravity Integration
+
+Add the server block to your Antigravity MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "stock_fetcher": {
+      "command": "python",
+      "args": ["-m", "stock_fetcher.mcp.server"],
+      "env": {
+        "PEXELS_API_KEY": "YOUR_PEXELS_KEY",
+        "PIXABAY_API_KEY": "YOUR_PIXABAY_KEY",
+        "UNSPLASH_API_KEY": "YOUR_UNSPLASH_KEY"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Manual Server Execution
+
+You can run the MCP server standalone to verify stdio initialization:
 
 ```bash
 python -m stock_fetcher.mcp.server
 ```
-The server will silently wait for valid JSON-RPC messages on `stdin`.
+
+The process will start and wait for standard JSON-RPC initialization payloads on `stdin`.

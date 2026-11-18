@@ -2,24 +2,32 @@
 
 ## Supported Versions
 
-Currently, only the latest release of `stock-fetcher` receives security updates.
+Only the current minor release series of `stock-fetcher` receives active security updates.
 
-| Version | Supported          |
-|---------| ------------------ |
-| 0.1.x   | :white_check_mark: |
-| < 0.2.0 | :x:                |
+| Version | Supported |
+| :--- | :--- |
+| 0.2.x | Yes |
+| < 0.2.0 | No |
 
 ## Reporting a Vulnerability
 
-Security is highly important to us. If you discover a security vulnerability within `stock-fetcher` (such as insecure handling of API keys, improper SSL verification, or malicious code injection vectors), please do **not** open a public GitHub issue.
+Security issues affecting `stock-fetcher` (including API credential handling, TLS certificate verification failures, or dependency vulnerabilities) must not be reported via public GitHub issues.
 
-Instead, please report it privately:
-1. Contact the repository owner via email, or
-2. Use the "Security Advisories" -> "Report a Vulnerability" feature directly on GitHub if available on the repository.
+### Private Disclosure Process
 
-We will review all reports and try to respond as quickly as possible. When reporting a vulnerability, please include:
-- A detailed description of the vulnerability.
-- Step-by-step instructions to reproduce the issue.
-- Any potential impact on users or systems.
+1. Open a draft security advisory via [GitHub Security Advisories](https://github.com/AtaCanYmc/stock-fetcher/security/advisories/new).
+2. If GitHub Advisories is inaccessible, email the maintainer directly at `atacanymc@gmail.com` with the subject line `[SECURITY] stock-fetcher vulnerability report`.
 
-Thank you for helping keep the community safe!
+### Report Requirements
+
+Please include the following technical details in your report:
+- Component or module affected (`src/stock_fetcher/...`).
+- Description of the attack vector or failure mode.
+- Step-by-step reproduction commands or minimal script.
+- Potential blast radius or data exposure risk.
+
+### Response SLA
+
+- **Initial Response**: Within 48 hours of receipt.
+- **Triage & Assessment**: Within 5 business days.
+- **Patch Release**: Scheduled based on CVSS severity rating. Critical advisories receive hotfix releases within 7 business days of confirmation.
