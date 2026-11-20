@@ -1,0 +1,18 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      user-agent:
+      - Mozilla/5.0 (compatible; StockFetcher/0.2.0)
+    method: GET
+    uri: https://www.flickr.com/search/?text=alps&license=4%2C5%2C6%2C9%2C10&page=1
+  response:
+    body:
+      string: '<!DOCTYPE html><html><body><div class="view photo-list-view"><img src="//live.staticflickr.com/65535/5123456789_abcdef1234_m.jpg" alt="Majestic Alps Summit with Glacial Reflection" /><img src="//live.staticflickr.com/65535/5987654321_fedcba4321_m.jpg" alt="Snow covered alpine pass in Switzerland" /></div></body></html>'
+    headers:
+      Content-Type:
+      - text/html; charset=utf-8
+    status:
+      code: 200
+      message: OK
+version: 1

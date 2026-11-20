@@ -1,0 +1,119 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - commons.wikimedia.org
+      user-agent:
+      - stock-fetcher/0.3.0 (https://github.com/AtaCanYmc/stock-fetcher)
+    method: GET
+    uri: https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=mountain&gsrnamespace=6&gsrlimit=2&gsroffset=0&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=400&format=json&formatversion=2
+  response:
+    body:
+      string: "{\"batchcomplete\":true,\"continue\":{\"gsroffset\":2,\"continue\":\"gsroffset||\"},\"query\":{\"pages\":[{\"pageid\":125216708,\"ns\":6,\"title\":\"File:Himalayas,
+        Ama Dablam, Nepal.jpg\",\"index\":1,\"imagerepository\":\"local\",\"imageinfo\":[{\"size\":7665281,\"width\":4032,\"height\":2688,\"thumburl\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Himalayas%2C_Ama_Dablam%2C_Nepal.jpg/500px-Himalayas%2C_Ama_Dablam%2C_Nepal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail\",\"thumbwidth\":400,\"thumbheight\":267,\"responsiveUrls\":{\"2\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Himalayas%2C_Ama_Dablam%2C_Nepal.jpg/960px-Himalayas%2C_Ama_Dablam%2C_Nepal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail\"},\"thumbattribs\":{\"src\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Himalayas%2C_Ama_Dablam%2C_Nepal.jpg/500px-Himalayas%2C_Ama_Dablam%2C_Nepal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail\",\"decoding\":\"async\",\"loading\":\"lazy\",\"width\":400,\"height\":267,\"srcset\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Himalayas%2C_Ama_Dablam%2C_Nepal.jpg/960px-Himalayas%2C_Ama_Dablam%2C_Nepal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+        2x\"},\"url\":\"https://upload.wikimedia.org/wikipedia/commons/2/29/Himalayas%2C_Ama_Dablam%2C_Nepal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original\",\"descriptionurl\":\"https://commons.wikimedia.org/wiki/File:Himalayas,_Ama_Dablam,_Nepal.jpg\",\"descriptionshorturl\":\"https://commons.wikimedia.org/wiki/Special:Redirect/page/125216708\",\"extmetadata\":{\"DateTime\":{\"value\":\"2023-03-30
+        15:59:06\",\"source\":\"mediawiki-metadata\",\"hidden\":\"\"},\"ObjectName\":{\"value\":\"Himalayas,
+        Ama Dablam, Nepal\",\"source\":\"mediawiki-metadata\"},\"CommonsMetadataExtension\":{\"value\":1.2,\"source\":\"extension\",\"hidden\":\"\"},\"Categories\":{\"value\":\"Ama
+        Dablam|Malanphulan|Photos by Vyacheslav Argenberg|Images with annotations|Self-published
+        work|Featured pictures on Wikipedia, English|Featured pictures of Nepal|Featured
+        pictures on Wikipedia, Spanish|Photographs taken on 2009-10-18|Mountains with
+        clouds|October 2009 Nepal photographs|Clouds and blue sky in Nepal|Mountains
+        with snow in Nepal|Snow in Nepal in October|Featured pictures of the Himalayas|Photos
+        by Vyacheslav Argenberg in Nepal|Photos by Vyacheslav Argenberg in 2009\",\"source\":\"commons-categories\",\"hidden\":\"\"},\"Assessments\":{\"value\":\"quality|featured|potd\",\"source\":\"commons-categories\",\"hidden\":\"\"},\"ImageDescription\":{\"value\":\"Ama
+        Dablam Peak (\\\"Mother's Necklace\\\", \u0906\u092E\u093E \u0926\u092C\u094D\u0932\u092E,
+        6,812 metres (22,349\_ft)) as seen from Chola Valley. Khumbu Everest Zone.
+        Nepal, Himalayas.\",\"source\":\"commons-desc-page\"},\"DateTimeOriginal\":{\"value\":\"2009-10-18
+        12:40:30\",\"source\":\"commons-desc-page\"},\"Credit\":{\"value\":\"<span
+        class=\\\"int-own-work\\\" lang=\\\"en\\\">Own work</span>\",\"source\":\"commons-desc-page\"},\"Artist\":{\"value\":\"<a
+        href=\\\"//commons.wikimedia.org/wiki/User:Argenberg\\\" title=\\\"User:Argenberg\\\">Vyacheslav
+        Argenberg</a>\",\"source\":\"commons-desc-page\"},\"LicenseShortName\":{\"value\":\"CC
+        BY 4.0\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"UsageTerms\":{\"value\":\"Creative
+        Commons Attribution 4.0\",\"source\":\"commons-desc-page\"},\"AttributionRequired\":{\"value\":\"true\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"Attribution\":{\"value\":\"\xA9
+        <a href=\\\"//commons.wikimedia.org/wiki/User:Argenberg\\\" title=\\\"User:Argenberg\\\">Vyacheslav
+        Argenberg</a>\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"LicenseUrl\":{\"value\":\"https://creativecommons.org/licenses/by/4.0\",\"source\":\"commons-desc-page\"},\"Copyrighted\":{\"value\":\"True\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"Restrictions\":{\"value\":\"\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"License\":{\"value\":\"cc-by-4.0\",\"source\":\"commons-templates\",\"hidden\":\"\"}}}]},{\"pageid\":125747465,\"ns\":6,\"title\":\"File:Everest,
+        Himalayas.jpg\",\"index\":2,\"imagerepository\":\"local\",\"imageinfo\":[{\"size\":8357266,\"width\":4032,\"height\":2688,\"thumburl\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Everest%2C_Himalayas.jpg/500px-Everest%2C_Himalayas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail\",\"thumbwidth\":400,\"thumbheight\":267,\"responsiveUrls\":{\"2\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Everest%2C_Himalayas.jpg/960px-Everest%2C_Himalayas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail\"},\"thumbattribs\":{\"src\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Everest%2C_Himalayas.jpg/500px-Everest%2C_Himalayas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail\",\"decoding\":\"async\",\"loading\":\"lazy\",\"width\":400,\"height\":267,\"srcset\":\"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Everest%2C_Himalayas.jpg/960px-Everest%2C_Himalayas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+        2x\"},\"url\":\"https://upload.wikimedia.org/wikipedia/commons/9/90/Everest%2C_Himalayas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original\",\"descriptionurl\":\"https://commons.wikimedia.org/wiki/File:Everest,_Himalayas.jpg\",\"descriptionshorturl\":\"https://commons.wikimedia.org/wiki/Special:Redirect/page/125747465\",\"extmetadata\":{\"DateTime\":{\"value\":\"2022-11-20
+        21:51:15\",\"source\":\"mediawiki-metadata\",\"hidden\":\"\"},\"ObjectName\":{\"value\":\"Everest,
+        Himalayas\",\"source\":\"mediawiki-metadata\"},\"CommonsMetadataExtension\":{\"value\":1.2,\"source\":\"extension\",\"hidden\":\"\"},\"Categories\":{\"value\":\"Views
+        of Mount Everest from Kala Patthar|Photos by Vyacheslav Argenberg|Self-published
+        work|Featured pictures of Nepal|Blue sky in Nepal|Featured pictures on Wikipedia,
+        Vietnamese|Photographs taken on 2009-10-19|October 2009 Nepal photographs|Mountains
+        with snow in Nepal|Snow in Nepal in October|Featured pictures of the Himalayas|Ice
+        cliffs of the Himalayas|Photos by Vyacheslav Argenberg in Nepal|Photos by
+        Vyacheslav Argenberg in 2009\",\"source\":\"commons-categories\",\"hidden\":\"\"},\"Assessments\":{\"value\":\"quality|featured|potd\",\"source\":\"commons-categories\",\"hidden\":\"\"},\"ImageDescription\":{\"value\":\"Mount
+        Everest, the highest mountain in the world. Mount Everest, Nepal, Himalayas.\",\"source\":\"commons-desc-page\"},\"DateTimeOriginal\":{\"value\":\"2009-10-19
+        14:56:21\",\"source\":\"commons-desc-page\"},\"Credit\":{\"value\":\"<span
+        class=\\\"int-own-work\\\" lang=\\\"en\\\">Own work</span>\",\"source\":\"commons-desc-page\"},\"Artist\":{\"value\":\"<a
+        href=\\\"//commons.wikimedia.org/wiki/User:Argenberg\\\" title=\\\"User:Argenberg\\\">Vyacheslav
+        Argenberg</a>\",\"source\":\"commons-desc-page\"},\"LicenseShortName\":{\"value\":\"CC
+        BY 4.0\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"UsageTerms\":{\"value\":\"Creative
+        Commons Attribution 4.0\",\"source\":\"commons-desc-page\"},\"AttributionRequired\":{\"value\":\"true\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"Attribution\":{\"value\":\"\xA9
+        <a href=\\\"//commons.wikimedia.org/wiki/User:Argenberg\\\" title=\\\"User:Argenberg\\\">Vyacheslav
+        Argenberg</a>\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"LicenseUrl\":{\"value\":\"https://creativecommons.org/licenses/by/4.0\",\"source\":\"commons-desc-page\"},\"Copyrighted\":{\"value\":\"True\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"Restrictions\":{\"value\":\"\",\"source\":\"commons-desc-page\",\"hidden\":\"\"},\"License\":{\"value\":\"cc-by-4.0\",\"source\":\"commons-templates\",\"hidden\":\"\"}}}]}]}}"
+    headers:
+      accept-ranges:
+      - bytes
+      age:
+      - '2'
+      cache-control:
+      - max-age=3600, s-maxage=3600, public
+      content-disposition:
+      - inline; filename=api-result.json
+      content-length:
+      - '7357'
+      content-security-policy:
+      - default-src 'self'; script-src 'none'; object-src 'none'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Fri, 20 Nov 2026 15:25:32 GMT
+      expires:
+      - Fri, 20 Nov 2026 16:25:33 GMT
+      nel:
+      - '{ "report_to": "wm_nel", "max_age": 604800, "failure_fraction": 0.05, "success_fraction":
+        0.0}'
+      report-to:
+      - '{ "group": "wm_nel", "max_age": 604800, "endpoints": [{ "url": "https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0"
+        }] }'
+      server:
+      - mw-api-ext.eqiad.main-689958fcbd-gv2kx
+      server-timing:
+      - cache;desc="miss", host;desc="cp6009",co_id;desc="4035873752"
+      set-cookie:
+      - WMF-Last-Access=20-Nov-2026;Path=/;HttpOnly;secure;Expires=Tue, 22 Dec 2026
+        12:00:00 GMT
+      - GeoIP=TR:35:Bornova:38.47:27.21:v4; Path=/; secure; Domain=.wikimedia.org
+      - NetworkProbeLimit=0.001;Path=/;Secure;SameSite=None;Max-Age=3600
+      - WMF-Uniq=p_MUlVCh-_GfZ4wWMTcwAwQeAAAAAFvdqsJV3fR0Bx66lNv6cm7MvWm2r5AgWIPL;Domain=commons.wikimedia.org;Path=/;HttpOnly;secure;SameSite=None;Expires=Sat,
+        20 Nov 2027 00:00:00 GMT
+      strict-transport-security:
+      - max-age=106384710; includeSubDomains; preload
+      vary:
+      - Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent
+      x-analytics:
+      - ''
+      x-cache:
+      - cp6002 miss, cp6009 miss
+      x-cache-status:
+      - miss
+      x-client-ip:
+      - 94.55.229.164
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-request-id:
+      - ae56a234-1321-4193-8cc0-f72d08a990c5
+      x-search-id:
+      - ckxl4cocjsha6qvfks4eedzsl
+    status:
+      code: 200
+      message: OK
+version: 1

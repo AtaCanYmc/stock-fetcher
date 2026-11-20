@@ -1,0 +1,69 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.openverse.org
+      user-agent:
+      - stock-fetcher/0.3.0 (https://github.com/AtaCanYmc/stock-fetcher)
+    method: GET
+    uri: https://api.openverse.org/v1/images/?q=lake&page_size=2&page=1
+  response:
+    body:
+      string: '{"result_count":240,"page_count":120,"page_size":2,"page":1,"results":[{"id":"09340fad-dbfb-431e-8c72-78bfe8e92169","title":"lake","indexed_on":"2020-04-11T02:02:18.187916Z","foreign_landing_url":"https://www.flickr.com/photos/75487768@N04/6859140105","url":"https://live.staticflickr.com/7203/6859140105_5eb32202d9_b.jpg","creator":"barnyz","creator_url":"https://www.flickr.com/photos/75487768@N04","license":"by-nc-nd","license_version":"2.0","license_url":"https://creativecommons.org/licenses/by-nc-nd/2.0/","provider":"flickr","source":"flickr","category":null,"filesize":null,"filetype":null,"tags":[{"name":"lake","accuracy":null,"unstable__provider":"flickr"}],"attribution":"\"lake\"
+        by barnyz is licensed under CC BY-NC-ND 2.0. To view a copy of this license,
+        visit https://creativecommons.org/licenses/by-nc-nd/2.0/.","fields_matched":["description","title","tags.name"],"mature":false,"height":681,"width":1024,"thumbnail":"https://api.openverse.org/v1/images/09340fad-dbfb-431e-8c72-78bfe8e92169/thumb/","detail_url":"https://api.openverse.org/v1/images/09340fad-dbfb-431e-8c72-78bfe8e92169/","related_url":"https://api.openverse.org/v1/images/09340fad-dbfb-431e-8c72-78bfe8e92169/related/","unstable__sensitivity":[]},{"id":"1ed78091-2011-4deb-b853-09c6aea8c13b","title":"lake","indexed_on":"2018-11-08T17:31:32.467511Z","foreign_landing_url":"https://www.flickr.com/photos/75487768@N04/7886633360","url":"https://live.staticflickr.com/8457/7886633360_10429f9213_b.jpg","creator":"barnyz","creator_url":"https://www.flickr.com/photos/75487768@N04","license":"by-nc-nd","license_version":"2.0","license_url":"https://creativecommons.org/licenses/by-nc-nd/2.0/","provider":"flickr","source":"flickr","category":null,"filesize":null,"filetype":null,"tags":[{"name":"lake","accuracy":null,"unstable__provider":"flickr"}],"attribution":"\"lake\"
+        by barnyz is licensed under CC BY-NC-ND 2.0. To view a copy of this license,
+        visit https://creativecommons.org/licenses/by-nc-nd/2.0/.","fields_matched":["description","title","tags.name"],"mature":false,"height":681,"width":1024,"thumbnail":"https://api.openverse.org/v1/images/1ed78091-2011-4deb-b853-09c6aea8c13b/thumb/","detail_url":"https://api.openverse.org/v1/images/1ed78091-2011-4deb-b853-09c6aea8c13b/","related_url":"https://api.openverse.org/v1/images/1ed78091-2011-4deb-b853-09c6aea8c13b/related/","unstable__sensitivity":[]}]}'
+    headers:
+      CF-RAY:
+      - a5d877cb59522474-ADB
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 20 Nov 2026 15:25:38 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      allow:
+      - GET, HEAD, OPTIONS
+      cf-cache-status:
+      - MISS
+      content-length:
+      - '2396'
+      cross-origin-opener-policy:
+      - same-origin
+      last-modified:
+      - Fri, 20 Nov 2026 15:25:38 GMT
+      referrer-policy:
+      - same-origin
+      vary:
+      - Accept-Encoding
+      - Accept, Authorization, origin
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-ratelimit-available-anon_burst:
+      - '19'
+      x-ratelimit-available-anon_sustained:
+      - '199'
+      x-ratelimit-limit-anon_burst:
+      - 20/min
+      x-ratelimit-limit-anon_sustained:
+      - 200/day
+      x-request-id:
+      - 6edafc01-6dd5-457e-a928-7d3c50fa5e2a
+    status:
+      code: 200
+      message: OK
+version: 1

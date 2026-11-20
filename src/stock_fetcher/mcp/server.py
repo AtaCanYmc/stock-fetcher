@@ -3,18 +3,24 @@ import sys
 
 try:
     from mcp.server.fastmcp import FastMCP
+
+    mcp = FastMCP("stock_fetcher")
+    tool = mcp.tool
 except ModuleNotFoundError:
-    print("Error: MCP server dependencies are missing.", file=sys.stderr)
-    print("Install via: pip install 'stock-fetcher[mcp]'", file=sys.stderr)
-    sys.exit(1)
+    mcp = None
+
+    def tool():
+        def decorator(f):
+            return f
+
+        return decorator
+
 
 from ..exceptions import ProviderNotFoundError, StockFetcherError
 from ..factory import ClientFactory
 
-mcp = FastMCP("stock_fetcher")
 
-
-@mcp.tool()
+@tool()
 def search_images(
     provider: str,
     term: str,
@@ -78,4 +84,8 @@ def search_images(
 
 
 if __name__ == "__main__":
+    if mcp is None:
+        print("Error: MCP server dependencies are missing.", file=sys.stderr)
+        print("Install via: pip install 'stock-fetcher[mcp]'", file=sys.stderr)
+        sys.exit(1)
     mcp.run()

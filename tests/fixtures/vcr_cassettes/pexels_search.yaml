@@ -1,0 +1,24 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      Authorization:
+      - test-token
+    method: GET
+    uri: https://api.pexels.com/v1/search?query=ocean&per_page=2&page=1
+  response:
+    body:
+      string: '{"page":1,"per_page":2,"photos":[{"id":12345,"width":4000,"height":3000,"url":"https://www.pexels.com/photo/12345/","photographer":"Jane Doe","photographer_url":"https://www.pexels.com/@janedoe","photographer_id":678,"avg_color":"#32527B","src":{"original":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg","large":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg?auto=compress&cs=tinysrgb&h=650&w=940","medium":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg?auto=compress&cs=tinysrgb&h=350","small":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg?auto=compress&cs=tinysrgb&h=130","portrait":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800","landscape":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200","tiny":"https://images.pexels.com/photos/12345/pexels-photo-12345.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"},"liked":false,"alt":"Blue ocean waves rolling under sunny sky"},{"id":67890,"width":5000,"height":3333,"url":"https://www.pexels.com/photo/67890/","photographer":"John Smith","photographer_url":"https://www.pexels.com/@johnsmith","photographer_id":890,"avg_color":"#1B3B6F","src":{"original":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg","large":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg?auto=compress&cs=tinysrgb&h=650&w=940","medium":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg?auto=compress&cs=tinysrgb&h=350","small":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg?auto=compress&cs=tinysrgb&h=130","portrait":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800","landscape":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200","tiny":"https://images.pexels.com/photos/67890/pexels-photo-67890.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"},"liked":false,"alt":"Calm turquoise ocean water"}],"total_results":8000,"next_page":"https://api.pexels.com/v1/search?page=2&per_page=2&query=ocean"}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Ratelimit-Limit:
+      - '200'
+      X-Ratelimit-Remaining:
+      - '198'
+      X-Ratelimit-Reset:
+      - '3600'
+    status:
+      code: 200
+      message: OK
+version: 1

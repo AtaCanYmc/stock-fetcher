@@ -1,0 +1,22 @@
+interactions:
+- request:
+    body: ''
+    headers: {}
+    method: GET
+    uri: https://pixabay.com/api/?key=test-key&q=aurora&per_page=2&page=1&image_type=photo
+  response:
+    body:
+      string: '{"total":500,"totalHits":500,"hits":[{"id":54321,"pageURL":"https://pixabay.com/photos/aurora-borealis-54321/","type":"photo","tags":"aurora, northern lights, sky","previewURL":"https://cdn.pixabay.com/photo/preview_54321.jpg","previewWidth":150,"previewHeight":99,"webformatURL":"https://pixabay.com/photo/web_54321.jpg","webformatWidth":640,"webformatHeight":426,"largeImageURL":"https://pixabay.com/get/large_54321.jpg","imageWidth":4000,"imageHeight":2667,"imageSize":2500000,"views":15000,"downloads":8500,"likes":620,"comments":45,"user_id":111,"user":"aurorashooter","userImageURL":"https://cdn.pixabay.com/user/111.jpg"},{"id":98765,"pageURL":"https://pixabay.com/photos/aurora-green-98765/","type":"photo","tags":"green aurora, winter, norway","previewURL":"https://cdn.pixabay.com/photo/preview_98765.jpg","previewWidth":150,"previewHeight":100,"webformatURL":"https://pixabay.com/photo/web_98765.jpg","webformatWidth":640,"webformatHeight":427,"largeImageURL":"https://pixabay.com/get/large_98765.jpg","imageWidth":5184,"imageHeight":3456,"imageSize":4100000,"views":22000,"downloads":12000,"likes":940,"comments":70,"user_id":222,"user":"arcticfox","userImageURL":"https://cdn.pixabay.com/user/222.jpg"}]}'
+    headers:
+      Content-Type:
+      - application/json
+      X-RateLimit-Limit:
+      - '100'
+      X-RateLimit-Remaining:
+      - '95'
+      X-RateLimit-Reset:
+      - '60'
+    status:
+      code: 200
+      message: OK
+version: 1

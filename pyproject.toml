@@ -33,7 +33,8 @@ all = [
 ]
 dev = [
     "pre-commit",
-    "ruff"
+    "ruff",
+    "vcrpy"
 ]
 
 [tool.setuptools.packages.find]

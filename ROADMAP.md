@@ -31,5 +31,5 @@ This document outlines planned technical milestones and architecture enhancement
 ## v1.0.0: Production Hardening
 
 - **Full Type Completeness**: Enforce strict `mypy` typing across all internal and public modules.
-- **End-to-End Test Suite**: Complete unit and integration test coverage using VCR.py for recorded network fixtures.
+- [x] **End-to-End Test Suite**: Implemented comprehensive integration and E2E suites using VCR.py network cassettes (offline regression testing for all 6 providers) and Typer CliRunner for CLI and MCP flows.
 - **Stable Public API**: Freeze core fetcher interfaces and deprecate legacy dictionary response shapes.
