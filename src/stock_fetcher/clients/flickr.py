@@ -28,7 +28,7 @@ class FlickrClient(BaseFetcher):
     def __init__(self, api_key: str = "", cache: Optional[BaseCache] = None):
         super().__init__(api_key=api_key, cache=cache)
         self.base_url = "https://www.flickr.com/search/"
-        self.headers = {"User-Agent": "Mozilla/5.0 (compatible; StockFetcher/0.2.0)"}
+        self.headers = {"User-Agent": "Mozilla/5.0 (compatible; StockFetcher/0.3.0)"}
 
     @property
     def name(self) -> str:
