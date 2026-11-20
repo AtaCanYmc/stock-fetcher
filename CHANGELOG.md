@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.4.0](https://github.com/AtaCanYmc/stock-fetcher/compare/stock-fetcher-v0.3.0...stock-fetcher-v0.4.0) (2026-11-20)
+
+
+### Features
+
+* **ci:** configure release-please to update website version tags ([9fcafe1](https://github.com/AtaCanYmc/stock-fetcher/commit/9fcafe1a54ea5a1000ed4bf307afa1b4e7b3d87d))
+* implement deterministic pagination cursors and adaptive rate limiting ([8d20fe2](https://github.com/AtaCanYmc/stock-fetcher/commit/8d20fe24bee1786bfaf94f5aef18f9e9fc4b5a6e))
+* **providers:** add Wikimedia Commons and Openverse client integrations ([a0eef57](https://github.com/AtaCanYmc/stock-fetcher/commit/a0eef57d87650ed72e845b8027562912817a2911))
+* **seo:** add sitemap.xml, robots.txt, llms.txt, OpenGraph, and Schema.org structured data across all site pages ([d1946b0](https://github.com/AtaCanYmc/stock-fetcher/commit/d1946b0846d4d07ecacaa6ad9473e2b79f82b203))
+* **showcase:** add Apple-inspired GitHub Pages showcase with live CLI simulation and real asset gallery ([fb69d8c](https://github.com/AtaCanYmc/stock-fetcher/commit/fb69d8c219bfe813170cfe79166218c3ece69c0d))
+* **site:** convert documentation guides to native HTML pages with unified navigation ([6c5955a](https://github.com/AtaCanYmc/stock-fetcher/commit/6c5955a92c80ffffdbb6ba1f5a4237785fa004d8))
+
+
+### Bug Fixes
+
+* **ci:** split pages workflow into separate build and deploy jobs ([fd10381](https://github.com/AtaCanYmc/stock-fetcher/commit/fd10381c216f9d68a2e9ac1e155f18b7bb14d945))
+* **security:** resolve CodeQL URL sanitization alerts and declare workflow permissions ([d2fc925](https://github.com/AtaCanYmc/stock-fetcher/commit/d2fc9255c8c41fadec7ef43f094fe01aa0dd35f5))
+* **security:** resolve SSRF risks, credential leakage, and unsafe file handling ([19779a7](https://github.com/AtaCanYmc/stock-fetcher/commit/19779a714464e09006ea08a3230aa6bf84322b2c))
+
+
+### Documentation
+
+* add comprehensive API keys guide and CLI configuration manual ([bf66530](https://github.com/AtaCanYmc/stock-fetcher/commit/bf66530813c1ad0f87c1d3c31d6aef682d89bc99))
+* add Homebrew tap badge to README ([2764719](https://github.com/AtaCanYmc/stock-fetcher/commit/2764719892a28f8885aebb7ba3827b0ab03e727b))
+* polish documentation and governance files via well-document ([32ba897](https://github.com/AtaCanYmc/stock-fetcher/commit/32ba8976feeb31f225681fbc11497d1ae26d34ea))
+
 ## [0.3.0](https://github.com/AtaCanYmc/stock-fetcher/compare/stock-fetcher-v0.2.0...stock-fetcher-v0.3.0) (2026-11-18)
 
 
