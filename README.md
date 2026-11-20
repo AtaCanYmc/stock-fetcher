@@ -10,11 +10,14 @@ Unified Python client, CLI utility, and Model Context Protocol (MCP) server for 
   <a href="https://github.com/AtaCanYmc/stock-fetcher/actions/workflows/ci.yml">
     <img src="https://github.com/AtaCanYmc/stock-fetcher/actions/workflows/ci.yml/badge.svg" alt="CI Status">
   </a>
-  <a href="https://atacanymc.github.io/stock-fetcher/">
-    <img src="https://img.shields.io/badge/Showcase-GitHub_Pages-00d2ff.svg" alt="Showcase Site">
+  <a href="https://pypi.org/project/stock-fetcher/">
+    <img src="https://img.shields.io/pypi/v/stock-fetcher.svg?color=blue&logo=pypi&logoColor=white" alt="PyPI Version">
   </a>
   <a href="https://github.com/AtaCanYmc/homebrew-tap">
     <img src="https://img.shields.io/badge/Homebrew-AtaCanYmc%2Ftap-orange.svg?logo=homebrew&logoColor=white" alt="Homebrew Tap">
+  </a>
+  <a href="https://atacanymc.github.io/stock-fetcher/">
+    <img src="https://img.shields.io/badge/Showcase-GitHub_Pages-00d2ff.svg" alt="Showcase Site">
   </a>
   <a href="https://opensource.org/licenses/Apache-2.0">
     <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License">
