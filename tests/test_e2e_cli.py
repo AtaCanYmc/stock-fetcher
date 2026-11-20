@@ -162,13 +162,16 @@ class EndToEndCLITest(unittest.TestCase):
             self.assertEqual(len(data), 1)
             self.assertEqual(data[0]["id"], "404")
 
-    def test_e2e_cli_download_command_and_traversal_defense(self):
+    @patch("stock_fetcher.cli.main._validate_safe_public_host")
+    def test_e2e_cli_download_command_and_traversal_defense(self, mock_val):
         with tempfile.TemporaryDirectory() as tmp_dir:
             # 1. Successful download mock
             mock_resp = MagicMock()
             mock_resp.headers = {"content-length": "100"}
             mock_resp.iter_content = lambda chunk_size: [b"fake_image_bytes"]
             mock_resp.raise_for_status = MagicMock()
+            mock_resp.is_redirect = False
+            mock_resp.status_code = 200
 
             with patch("requests.get", return_value=mock_resp):
                 result = self.runner.invoke(

@@ -1,10 +1,12 @@
 import asyncio
 import csv
+import ipaddress
 import json
 import os
+import socket
 import sys
 from typing import Any, Dict, List, Optional
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -30,12 +32,12 @@ except ModuleNotFoundError:
     print("    pip install 'stock-fetcher[cli]'", file=sys.stderr)
     sys.exit(1)
 
+from .. import __version__
 from ..cache import BaseCache, MemoryCache
 from ..exceptions import AuthenticationError, ProviderNotFoundError, StockFetcherError
 from ..factory import ClientFactory
 from ..models import StockImage
 
-__version__ = "0.2.0"
 MAX_DOWNLOAD_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB per image ceiling
 
 app = typer.Typer(
@@ -69,6 +71,65 @@ def _resolve_api_key(provider: str, explicit_key: str = "") -> str:
     return os.getenv("STOCK_FETCHER_API_KEY", "").strip()
 
 
+ALLOWED_IMAGE_EXTENSIONS = {
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp",
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".tif",
+    ".avif",
+    ".svg",
+}
+
+
+def _validate_safe_public_host(hostname: str) -> None:
+    """Ensure host resolves to globally routable public IPs (prevent SSRF to internal/loopback services)."""
+    if not hostname:
+        raise ValueError("Invalid URL: missing host authority.")
+
+    clean_host = hostname.strip().strip("[]")
+    try:
+        direct_ip = ipaddress.ip_address(clean_host)
+        if (
+            direct_ip.is_private
+            or direct_ip.is_loopback
+            or direct_ip.is_link_local
+            or direct_ip.is_reserved
+            or direct_ip.is_multicast
+            or direct_ip.is_unspecified
+        ):
+            raise ValueError(
+                f"Disallowed destination: target host resolves to private or loopback IP ({direct_ip})."
+            )
+        return
+    except ValueError as e:
+        if "Disallowed destination" in str(e):
+            raise
+        pass
+
+    try:
+        addr_infos = socket.getaddrinfo(clean_host, None)
+        for _, _, _, _, sockaddr in addr_infos:
+            ip_str = sockaddr[0]
+            ip = ipaddress.ip_address(ip_str)
+            if (
+                ip.is_private
+                or ip.is_loopback
+                or ip.is_link_local
+                or ip.is_reserved
+                or ip.is_multicast
+                or ip.is_unspecified
+            ):
+                raise ValueError(
+                    f"Disallowed destination: target host '{clean_host}' resolves to non-public IP ({ip})."
+                )
+    except socket.gaierror as exc:
+        raise ValueError(f"Failed to resolve host '{clean_host}': {exc}")
+
+
 def _download_single_image(
     url: str,
     output_dir: str,
@@ -99,6 +160,10 @@ def _download_single_image(
 
     if not safe_name or safe_name in (".", "..") or "." not in safe_name:
         safe_name = f"image_{abs(hash(url)) % 100000000}.jpg"
+    else:
+        _, ext = os.path.splitext(safe_name)
+        if ext.lower() not in ALLOWED_IMAGE_EXTENSIONS:
+            safe_name = f"{safe_name}.jpg"
 
     dest_path = os.path.join(canonical_dir, safe_name)
     canonical_dest = os.path.realpath(os.path.abspath(dest_path))
@@ -111,7 +176,31 @@ def _download_single_image(
             f"Path traversal violation detected for destination: {filename}"
         )
 
-    response = requests.get(url, stream=True, timeout=30)
+    # Safe redirect navigation verifying host at every hop to prevent SSRF
+    current_url = url
+    response = None
+    for _ in range(5):
+        hop_parsed = urlparse(current_url)
+        if hop_parsed.scheme.lower() not in ("http", "https"):
+            raise ValueError(
+                f"Disallowed protocol scheme in redirect: '{hop_parsed.scheme}'. Only HTTP and HTTPS are permitted."
+            )
+        hop_host = hop_parsed.hostname or hop_parsed.netloc.split(":")[0]
+        _validate_safe_public_host(hop_host)
+
+        resp = requests.get(current_url, stream=True, timeout=30, allow_redirects=False)
+        if resp.is_redirect or resp.status_code in (301, 302, 303, 307, 308):
+            loc = resp.headers.get("Location")
+            if not loc:
+                response = resp
+                break
+            current_url = urljoin(current_url, loc)
+        else:
+            response = resp
+            break
+
+    if response is None:
+        raise ValueError("Download failed: exceeded maximum redirect hops.")
     response.raise_for_status()
 
     content_length = int(response.headers.get("content-length", 0))
@@ -126,6 +215,10 @@ def _download_single_image(
     downloaded = 0
     try:
         with open(canonical_dest, "wb") as f:
+            try:
+                os.chmod(canonical_dest, 0o600)
+            except OSError:
+                pass
             for chunk in response.iter_content(chunk_size=16384):
                 if chunk:
                     downloaded += len(chunk)
@@ -583,14 +676,14 @@ def check_keys() -> None:
         elif p == "openverse":
             val = os.getenv(env_var) or os.getenv("STOCK_FETCHER_API_KEY")
             if val:
-                masked = val[:4] + "..." + val[-2:] if len(val) > 6 else "***"
+                masked = val[:3] + "..." + val[-2:] if len(val) >= 12 else "***"
                 table.add_row(p, env_var, f"[green]Configured ({masked})[/green]")
             else:
                 table.add_row(p, env_var, "[dim]Optional (Public Tier Active)[/dim]")
         else:
             val = os.getenv(env_var) or os.getenv("STOCK_FETCHER_API_KEY")
             if val:
-                masked = val[:4] + "..." + val[-2:] if len(val) > 6 else "***"
+                masked = val[:3] + "..." + val[-2:] if len(val) >= 12 else "***"
                 table.add_row(p, env_var, f"[green]Configured ({masked})[/green]")
             else:
                 table.add_row(p, env_var, "[red]Not Set[/red]")

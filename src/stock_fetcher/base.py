@@ -1,5 +1,7 @@
+import re
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Tuple
+from urllib.parse import quote, quote_plus
 
 import httpx
 
@@ -63,7 +65,10 @@ class BaseFetcher(ABC):
         if not isinstance(term, str) or not term.strip():
             raise ValueError("Search term cannot be empty.")
 
-        clean_term = term.strip()
+        clean_term = term.replace("\0", "").strip()[:500]
+        if not clean_term:
+            raise ValueError("Search term cannot be empty.")
+
         try:
             clamped_limit = max(1, min(int(limit), max_limit))
         except (TypeError, ValueError):
@@ -95,8 +100,36 @@ class BaseFetcher(ABC):
     def _mask_error(self, exc: Exception) -> str:
         """Mask credentials from exception messages before surfacing to callers."""
         err_msg = str(exc)
-        if self.api_key and self.api_key in err_msg:
-            err_msg = err_msg.replace(self.api_key, "***")
+        if not self.api_key:
+            return err_msg
+
+        # Raw key
+        err_msg = err_msg.replace(self.api_key, "***")
+
+        # Percent-encoded variants
+        try:
+            q1 = quote(self.api_key)
+            if q1 != self.api_key:
+                err_msg = err_msg.replace(q1, "***")
+            q2 = quote_plus(self.api_key)
+            if q2 != self.api_key and q2 != q1:
+                err_msg = err_msg.replace(q2, "***")
+        except Exception:
+            pass
+
+        # Regex masking for common authentication parameters in URLs and headers
+        err_msg = re.sub(
+            r"(key|client_id|access_key|token|api_key)=([a-zA-Z0-9_\-\.]+)",
+            r"\1=***",
+            err_msg,
+            flags=re.IGNORECASE,
+        )
+        err_msg = re.sub(
+            r"(Bearer\s+)([a-zA-Z0-9_\-\.]+)",
+            r"\1***",
+            err_msg,
+            flags=re.IGNORECASE,
+        )
         return err_msg
 
     def _get_cached_results(

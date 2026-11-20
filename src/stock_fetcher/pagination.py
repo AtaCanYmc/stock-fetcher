@@ -39,7 +39,7 @@ def decode_cursor(cursor: Optional[str]) -> Tuple[int, int]:
         return 1, 0
 
     clean_cursor = cursor.strip()
-    if not clean_cursor:
+    if not clean_cursor or len(clean_cursor) > 1024:
         return 1, 0
 
     # Handle plain integer page string (e.g. "2" or "p2")

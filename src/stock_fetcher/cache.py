@@ -85,6 +85,10 @@ class DiskCache(BaseCache):
             home = os.path.expanduser("~")
             self.cache_dir = os.path.join(home, ".cache", "stock-fetcher")
         os.makedirs(self.cache_dir, exist_ok=True)
+        try:
+            os.chmod(self.cache_dir, 0o700)
+        except OSError:
+            pass
         self._lock = threading.Lock()
 
     def _file_path_for_key(self, key: str) -> str:
@@ -127,6 +131,10 @@ class DiskCache(BaseCache):
         with self._lock:
             try:
                 with open(tmp_path, "w", encoding="utf-8") as f:
+                    try:
+                        os.chmod(tmp_path, 0o600)
+                    except OSError:
+                        pass
                     json.dump(payload, f)
                 os.replace(tmp_path, path)
             except OSError:

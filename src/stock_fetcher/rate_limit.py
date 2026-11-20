@@ -94,6 +94,9 @@ def parse_rate_limit_headers(headers: Any) -> RateLimitInfo:
             except (ValueError, TypeError):
                 pass
 
+    if reset_seconds is not None:
+        reset_seconds = max(0.0, min(reset_seconds, 86400.0))
+
     return RateLimitInfo(
         remaining=remaining,
         limit=limit,

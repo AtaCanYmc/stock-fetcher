@@ -6,8 +6,8 @@ Only the current minor release series of `stock-fetcher` receives active securit
 
 | Version | Supported |
 | :--- | :--- |
-| 0.2.x | Yes |
-| < 0.2.0 | No |
+| 0.3.x / 0.4.x | Yes |
+| < 0.3.0 | No |
 
 ## Reporting a Vulnerability
 
