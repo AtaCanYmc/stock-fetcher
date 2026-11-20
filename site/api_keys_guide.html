@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Step-by-step guide to obtaining free API keys for Pexels, Pixabay, and Unsplash, and configuring them for the stock-fetcher CLI.">
+  <title>API Keys Guide — stock-fetcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+  <!-- Sticky Frosted Navigation -->
+  <header class="header-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.png" alt="stock-fetcher logo" width="32" height="32">
+        <span>stock-fetcher</span>
+      </a>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#terminal">Terminal</a></li>
+          <li><a href="index.html#capabilities">Capabilities</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="api_keys_guide.html" style="color:var(--color-accent);">API Keys</a></li>
+          <li><a href="cli_manual.html">CLI Manual</a></li>
+          <li><a href="mcp_manual.html">MCP Manual</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/AtaCanYmc/stock-fetcher" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="doc-page">
+    <nav class="doc-breadcrumbs" aria-label="Breadcrumbs">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="#">Documentation</a>
+      <span>/</span>
+      <span style="color:var(--color-text-primary);">API Keys Guide</span>
+    </nav>
+
+    <header class="doc-header">
+      <span class="doc-badge">Configuration Guide</span>
+      <h1 class="doc-title">API Keys &amp; Authentication Guide</h1>
+      <p class="doc-lead">
+        Learn how to obtain free API credentials for Pexels, Pixabay, and Unsplash, and configure them permanently for the <code>stock-fetcher</code> CLI.
+      </p>
+    </header>
+
+    <article class="doc-content">
+      <h2>Provider Authentication Matrix</h2>
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Environment Variable</th>
+              <th>Key Required?</th>
+              <th>Free Tier Quota</th>
+              <th>Portal Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pexels</strong></td>
+              <td><code>PEXELS_API_KEY</code></td>
+              <td>Yes</td>
+              <td>200 req/hr (20,000/mo)</td>
+              <td><a href="https://www.pexels.com/api/" target="_blank" rel="noopener noreferrer">pexels.com/api</a></td>
+            </tr>
+            <tr>
+              <td><strong>Pixabay</strong></td>
+              <td><code>PIXABAY_API_KEY</code></td>
+              <td>Yes</td>
+              <td>100 req/minute</td>
+              <td><a href="https://pixabay.com/api/docs/" target="_blank" rel="noopener noreferrer">pixabay.com/api/docs</a></td>
+            </tr>
+            <tr>
+              <td><strong>Unsplash</strong></td>
+              <td><code>UNSPLASH_API_KEY</code></td>
+              <td>Yes</td>
+              <td>50 req/hr (Demo tier)</td>
+              <td><a href="https://unsplash.com/developers" target="_blank" rel="noopener noreferrer">unsplash.com/developers</a></td>
+            </tr>
+            <tr>
+              <td><strong>Flickr</strong></td>
+              <td><em>None</em></td>
+              <td>No</td>
+              <td>Uncapped Public Scraping</td>
+              <td>Zero-Configuration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>How to Obtain API Keys</h2>
+
+      <h3>1. Pexels</h3>
+      <p>
+        Pexels provides immediate API access upon creating a developer application. Approval is automated and instantaneous without credit card requirements.
+      </p>
+      <ol>
+        <li><strong>Create an Account</strong>: Visit <a href="https://www.pexels.com/" target="_blank" rel="noopener noreferrer">pexels.com</a> and sign up or log in.</li>
+        <li><strong>Access Developer Portal</strong>: Open <a href="https://www.pexels.com/api/new/" target="_blank" rel="noopener noreferrer">pexels.com/api/new/</a>.</li>
+        <li><strong>Describe Your App</strong>: Fill in a title (e.g. <code>CLI Stock Fetcher</code>) and select personal scripting usage.</li>
+        <li><strong>Copy the Key</strong>: Your 56-character API token is generated immediately.</li>
+      </ol>
+
+      <div class="callout callout-note">
+        <div class="callout-title">Quota &amp; Limits</div>
+        <p>The free tier provides 200 requests per hour and 20,000 requests per month. Exceeding this returns HTTP 429.</p>
+      </div>
+
+      <h3>2. Pixabay</h3>
+      <p>
+        Pixabay links your API key directly to your user account without requiring an application approval workflow.
+      </p>
+      <ol>
+        <li><strong>Create an Account</strong>: Register at <a href="https://pixabay.com/" target="_blank" rel="noopener noreferrer">pixabay.com</a>.</li>
+        <li><strong>Open Documentation</strong>: Visit <a href="https://pixabay.com/api/docs/" target="_blank" rel="noopener noreferrer">pixabay.com/api/docs/</a> while logged in.</li>
+        <li><strong>Locate Your Personal Key</strong>: Look under the "Search Images" or "Parameters" section for the green highlighted box:
+          <pre><code>key: 12345678-abcdef0123456789abcdef012</code></pre>
+        </li>
+        <li><strong>Copy the Complete Key</strong>: Copy the full string including the hyphen.</li>
+      </ol>
+
+      <div class="callout callout-note">
+        <div class="callout-title">Quota &amp; Limits</div>
+        <p>Pixabay allows 100 requests per 60-second window across all endpoints on the free plan.</p>
+      </div>
+
+      <h3>3. Unsplash</h3>
+      <p>
+        Unsplash requires creating a developer application within their official API portal.
+      </p>
+      <ol>
+        <li><strong>Register as Developer</strong>: Go to <a href="https://unsplash.com/developers" target="_blank" rel="noopener noreferrer">unsplash.com/developers</a>.</li>
+        <li><strong>Create Application</strong>: Go to <strong>Your apps</strong> &rarr; <strong>New Application</strong> and accept terms.</li>
+        <li><strong>Retrieve Access Key</strong>: In your application details, locate the <strong>Keys</strong> section and copy the <strong>Access Key</strong>.</li>
+      </ol>
+
+      <div class="callout callout-important">
+        <div class="callout-title">Security Note</div>
+        <p>Always use the <strong>Access Key</strong>, never the Secret Key. <code>stock-fetcher</code> uses standard client authentication headers (<code>Authorization: Client-ID &lt;ACCESS_KEY&gt;</code>).</p>
+      </div>
+
+      <h3>4. Flickr (Zero Configuration)</h3>
+      <p>
+        Flickr integration uses an integrated HTML parser targeting Creative Commons media.
+      </p>
+      <ul>
+        <li><strong>No API key required</strong>.</li>
+        <li><strong>No registration or credential approval required</strong>.</li>
+        <li>Works immediately out of the box in the CLI and Python SDK.</li>
+      </ul>
+
+      <h2>Configuring Keys for the CLI</h2>
+
+      <h3>Method 1: Persistent Shell Profile (Recommended)</h3>
+      <p>
+        Add environment variables to your shell startup file so they are always available in your terminal:
+      </p>
+
+      <h4>macOS / Zsh (Default on macOS)</h4>
+      <pre><code># Add to ~/.zshrc
+export PEXELS_API_KEY="your_pexels_key_here"
+export PIXABAY_API_KEY="your_pixabay_key_here"
+export UNSPLASH_API_KEY="your_unsplash_key_here"
+
+# Apply changes immediately
+source ~/.zshrc</code></pre>
+
+      <h4>Linux / Bash</h4>
+      <pre><code># Add to ~/.bashrc
+export PEXELS_API_KEY="your_pexels_key_here"
+export PIXABAY_API_KEY="your_pixabay_key_here"
+export UNSPLASH_API_KEY="your_unsplash_key_here"
+
+# Apply changes immediately
+source ~/.bashrc</code></pre>
+
+      <h3>Method 2: Project-Level <code>.env</code> File</h3>
+      <p>Create a <code>.env</code> file in your workspace directory:</p>
+      <pre><code>PEXELS_API_KEY=your_pexels_key_here
+PIXABAY_API_KEY=your_pixabay_key_here
+UNSPLASH_API_KEY=your_unsplash_key_here</code></pre>
+      <p>Load into your environment prior to executing commands:</p>
+      <pre><code>export $(grep -v '^#' .env | xargs)
+stock-fetcher search pexels "architecture"</code></pre>
+
+      <h3>Method 3: Direct Command Flag (<code>--api-key</code>)</h3>
+      <p>Pass an explicit token using <code>--api-key</code> (or <code>-k</code>):</p>
+      <pre><code>stock-fetcher search pexels "alpine lake" --api-key "your_pexels_key_here"</code></pre>
+
+      <h3>Method 4: Global Fallback Variable</h3>
+      <p>If you prefer a single unified environment variable, configure <code>STOCK_FETCHER_API_KEY</code>:</p>
+      <pre><code>export STOCK_FETCHER_API_KEY="your_universal_key"</code></pre>
+
+      <h2>Verifying Your Configuration</h2>
+      <p>
+        Use the built-in diagnostic commands to verify that your keys are detected properly without consuming quota:
+      </p>
+      <pre><code># Inspect masked environment variables
+stock-fetcher keys
+
+# Inspect provider readiness table
+stock-fetcher providers</code></pre>
+
+      <h2>Security Best Practices</h2>
+      <ul>
+        <li><strong>Never commit credentials</strong>: Always ensure <code>.env</code> is included in your <code>.gitignore</code>.</li>
+        <li><strong>Restrict file permissions</strong>: Protect your shell startup files: <code>chmod 600 ~/.zshrc</code>.</li>
+        <li><strong>Rotate leaked keys</strong>: If an API token is accidentally pushed to a repository, revoke and regenerate it immediately in the provider dashboard.</li>
+      </ul>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h4>stock-fetcher</h4>
+        <p>Unified, asynchronous, and cached stock photography search engine for terminals, applications, and AI agent environments.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Documentation</h5>
+        <ul>
+          <li><a href="api_keys_guide.html">API Keys Guide</a></li>
+          <li><a href="cli_manual.html">CLI Manual</a></li>
+          <li><a href="mcp_manual.html">MCP Manual</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Distribution</h5>
+        <ul>
+          <li><a href="https://github.com/AtaCanYmc/homebrew-tap" target="_blank" rel="noopener noreferrer">Homebrew Tap</a></li>
+          <li><a href="https://pypi.org/project/stock-fetcher/" target="_blank" rel="noopener noreferrer">PyPI Package</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Governance</h5>
+        <ul>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache 2.0</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Copyright &copy; 2026 AtaCanYmc. Licensed under Apache-2.0.</span>
+      <span><a href="index.html">&larr; Back to Home</a></span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

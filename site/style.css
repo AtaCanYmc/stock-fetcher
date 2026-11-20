@@ -788,6 +788,199 @@ a:hover {
   gap: 1rem;
 }
 
+/* Documentation Pages Layout & Typography */
+.doc-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 6rem;
+  width: 100%;
+}
+
+.doc-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}
+
+.doc-breadcrumbs a {
+  color: var(--color-text-secondary);
+}
+
+.doc-breadcrumbs a:hover {
+  color: var(--color-accent);
+}
+
+.doc-header {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 2rem;
+}
+
+.doc-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+}
+
+.doc-title {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.doc-lead {
+  font-size: 1.15rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.doc-content h2 {
+  font-size: 1.75rem;
+  margin: 3rem 0 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.doc-content h3 {
+  font-size: 1.3rem;
+  margin: 2rem 0 0.85rem;
+}
+
+.doc-content h4 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.65rem;
+}
+
+.doc-content p {
+  font-size: 0.98rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+.doc-content ul, .doc-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+.doc-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.65;
+}
+
+.doc-content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background-color: var(--color-bg-surface-elevated);
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+}
+
+.doc-content pre {
+  background-color: var(--color-terminal-bg);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.doc-content pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+/* Callouts / Alerts */
+.callout {
+  padding: 1.15rem 1.4rem;
+  border-radius: var(--radius-md);
+  margin: 1.75rem 0;
+  border-left: 4px solid;
+  background-color: var(--color-bg-surface);
+}
+
+.callout-note {
+  border-left-color: var(--color-code-blue);
+  background-color: rgba(96, 165, 250, 0.08);
+}
+
+.callout-important {
+  border-left-color: var(--color-accent);
+  background-color: rgba(0, 210, 255, 0.08);
+}
+
+.callout-tip {
+  border-left-color: var(--color-code-green);
+  background-color: rgba(52, 211, 153, 0.08);
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.callout-note .callout-title { color: var(--color-code-blue); }
+.callout-important .callout-title { color: var(--color-accent); }
+.callout-tip .callout-title { color: var(--color-code-green); }
+
+.callout p:last-child {
+  margin-bottom: 0;
+}
+
+/* Data Tables */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.75rem 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.doc-table th, .doc-table td {
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.doc-table th {
+  background-color: var(--color-bg-surface-elevated);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.doc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.doc-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
 /* Responsive Overrides (320px - 768px Hard Floor) */
 @media (max-width: 900px) {
   .col-4, .col-6, .col-8, .col-12 {

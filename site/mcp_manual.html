@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Model Context Protocol (MCP) server manual for stock-fetcher: connect AI agents in Claude Desktop and Antigravity to copyright-free stock photography tools.">
+  <title>MCP Manual — stock-fetcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+  <!-- Sticky Frosted Navigation -->
+  <header class="header-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.png" alt="stock-fetcher logo" width="32" height="32">
+        <span>stock-fetcher</span>
+      </a>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#terminal">Terminal</a></li>
+          <li><a href="index.html#capabilities">Capabilities</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="api_keys_guide.html">API Keys</a></li>
+          <li><a href="cli_manual.html">CLI Manual</a></li>
+          <li><a href="mcp_manual.html" style="color:var(--color-accent);">MCP Manual</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/AtaCanYmc/stock-fetcher" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="doc-page">
+    <nav class="doc-breadcrumbs" aria-label="Breadcrumbs">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="#">Documentation</a>
+      <span>/</span>
+      <span style="color:var(--color-text-primary);">MCP Manual</span>
+    </nav>
+
+    <header class="doc-header">
+      <span class="doc-badge">AI Protocol Integration</span>
+      <h1 class="doc-title">Model Context Protocol (MCP) Manual</h1>
+      <p class="doc-lead">
+        Equip Claude Desktop, Cursor, and Google Antigravity AI agents with live, structured copyright-free image search tools over standard I/O (stdio).
+      </p>
+    </header>
+
+    <article class="doc-content">
+      <h2>Installation</h2>
+      <p>Install the package with the <code>mcp</code> optional extra:</p>
+      <pre><code>pip install "stock-fetcher[mcp]"</code></pre>
+
+      <h2>Protocol Specification</h2>
+      <p>
+        The server runs as an independent child process communicating via stdio JSON-RPC messages. Host agents dispatch structured tool calls and receive JSON image arrays containing <code>id</code>, <code>source</code>, <code>url_original</code>, <code>url_thumb</code>, and <code>url_page</code>.
+      </p>
+
+      <h2>Tool Definitions</h2>
+      <h3><code>search_images</code></h3>
+      <p>Searches for copyright-free images using the specified provider.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>term</code></td>
+              <td>String</td>
+              <td>Yes</td>
+              <td><em>None</em></td>
+              <td>Image search query.</td>
+            </tr>
+            <tr>
+              <td><code>provider</code></td>
+              <td>String</td>
+              <td>No</td>
+              <td><code>"pixabay"</code></td>
+              <td>Provider name: <code>pixabay</code>, <code>pexels</code>, <code>unsplash</code>, <code>flickr</code>.</td>
+            </tr>
+            <tr>
+              <td><code>limit</code></td>
+              <td>Integer</td>
+              <td>No</td>
+              <td><code>5</code></td>
+              <td>Maximum number of results to return (clamped 1&ndash;100).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Claude Desktop Integration</h2>
+      <p>Locate your Claude Desktop configuration file:</p>
+      <ul>
+        <li><strong>macOS</strong>: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+        <li><strong>Windows</strong>: <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+        <li><strong>Linux</strong>: <code>~/.config/Claude/claude_desktop_config.json</code></li>
+      </ul>
+
+      <p>Add the server definition under <code>mcpServers</code>:</p>
+      <pre><code>{
+  "mcpServers": {
+    "stock_fetcher": {
+      "command": "python",
+      "args": ["-m", "stock_fetcher.mcp.server"],
+      "env": {
+        "PEXELS_API_KEY": "YOUR_PEXELS_KEY",
+        "PIXABAY_API_KEY": "YOUR_PIXABAY_KEY",
+        "UNSPLASH_API_KEY": "YOUR_UNSPLASH_KEY"
+      }
+    }
+  }
+}</code></pre>
+
+      <h2>Google Antigravity Integration</h2>
+      <p>Add the server configuration block to your Antigravity MCP settings:</p>
+      <pre><code>{
+  "mcpServers": {
+    "stock_fetcher": {
+      "command": "python",
+      "args": ["-m", "stock_fetcher.mcp.server"],
+      "env": {
+        "PEXELS_API_KEY": "YOUR_PEXELS_KEY",
+        "PIXABAY_API_KEY": "YOUR_PIXABAY_KEY",
+        "UNSPLASH_API_KEY": "YOUR_UNSPLASH_KEY"
+      }
+    }
+  }
+}</code></pre>
+
+      <h2>Manual Server Execution</h2>
+      <p>Verify stdio JSON-RPC initialization directly from your terminal:</p>
+      <pre><code>python -m stock_fetcher.mcp.server</code></pre>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h4>stock-fetcher</h4>
+        <p>Unified, asynchronous, and cached stock photography search engine for terminals, applications, and AI agent environments.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Documentation</h5>
+        <ul>
+          <li><a href="api_keys_guide.html">API Keys Guide</a></li>
+          <li><a href="cli_manual.html">CLI Manual</a></li>
+          <li><a href="mcp_manual.html">MCP Manual</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Distribution</h5>
+        <ul>
+          <li><a href="https://github.com/AtaCanYmc/homebrew-tap" target="_blank" rel="noopener noreferrer">Homebrew Tap</a></li>
+          <li><a href="https://pypi.org/project/stock-fetcher/" target="_blank" rel="noopener noreferrer">PyPI Package</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Governance</h5>
+        <ul>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache 2.0</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Copyright &copy; 2026 AtaCanYmc. Licensed under Apache-2.0.</span>
+      <span><a href="index.html">&larr; Back to Home</a></span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
