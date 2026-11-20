@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+from urllib.parse import urlparse
 
 import vcr
 
@@ -40,10 +41,10 @@ class VCRNetworkFixturesEndToEndTest(unittest.TestCase):
             for img in results:
                 self.assertIsInstance(img, StockImage)
                 self.assertEqual(img.source, "pexels")
-                self.assertTrue(
-                    img.url_original.startswith("https://images.pexels.com")
+                self.assertEqual(
+                    urlparse(img.url_original).hostname, "images.pexels.com"
                 )
-                self.assertTrue(img.url_thumb.startswith("https://images.pexels.com"))
+                self.assertEqual(urlparse(img.url_thumb).hostname, "images.pexels.com")
                 self.assertIn(img.id, ("12345", "67890"))
 
             # Rate limit info parsed from cassette headers
@@ -61,7 +62,7 @@ class VCRNetworkFixturesEndToEndTest(unittest.TestCase):
             for img in results:
                 self.assertIsInstance(img, StockImage)
                 self.assertEqual(img.source, "pixabay")
-                self.assertTrue(img.url_original.startswith("https://pixabay.com"))
+                self.assertEqual(urlparse(img.url_original).hostname, "pixabay.com")
                 self.assertIn("aurora", img.title.lower())
 
             r_info = client.rate_limit_info
@@ -78,8 +79,8 @@ class VCRNetworkFixturesEndToEndTest(unittest.TestCase):
             for img in results:
                 self.assertIsInstance(img, StockImage)
                 self.assertEqual(img.source, "unsplash")
-                self.assertTrue(
-                    img.url_original.startswith("https://images.unsplash.com")
+                self.assertEqual(
+                    urlparse(img.url_original).hostname, "images.unsplash.com"
                 )
                 self.assertTrue(
                     img.author
@@ -100,8 +101,8 @@ class VCRNetworkFixturesEndToEndTest(unittest.TestCase):
             for img in results:
                 self.assertIsInstance(img, StockImage)
                 self.assertEqual(img.source, "flickr")
-                self.assertTrue(
-                    img.url_original.startswith("https://live.staticflickr.com")
+                self.assertEqual(
+                    urlparse(img.url_original).hostname, "live.staticflickr.com"
                 )
                 self.assertTrue(img.url_original.endswith("_b.jpg"))
 
@@ -114,11 +115,11 @@ class VCRNetworkFixturesEndToEndTest(unittest.TestCase):
             for img in results:
                 self.assertIsInstance(img, StockImage)
                 self.assertEqual(img.source, "wikimedia")
-                self.assertTrue(
-                    img.url_original.startswith("https://upload.wikimedia.org")
+                self.assertEqual(
+                    urlparse(img.url_original).hostname, "upload.wikimedia.org"
                 )
-                self.assertTrue(
-                    img.url_page.startswith("https://commons.wikimedia.org")
+                self.assertEqual(
+                    urlparse(img.url_page).hostname, "commons.wikimedia.org"
                 )
 
     def test_e2e_openverse_cassette(self):

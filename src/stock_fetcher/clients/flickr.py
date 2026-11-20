@@ -1,5 +1,6 @@
 import re
 from typing import List, Optional
+from urllib.parse import urlparse
 
 import httpx
 from bs4 import BeautifulSoup
@@ -42,8 +43,11 @@ class FlickrClient(BaseFetcher):
             if not src:
                 continue
 
-            if "staticflickr.com" in src:
-                hi_res = re.sub(r"_[a-z]\.jpg", "_b.jpg", src)
+            normalized_src = _normalize_flickr_url(src)
+            parsed_src = urlparse(normalized_src)
+            hostname = (parsed_src.hostname or "").lower()
+            if hostname == "staticflickr.com" or hostname.endswith(".staticflickr.com"):
+                hi_res = re.sub(r"_[a-z]\.jpg", "_b.jpg", normalized_src)
                 img_id = hi_res.split("/")[-1].split("_")[0]
 
                 if any(existing.id == img_id for existing in images):
@@ -54,8 +58,8 @@ class FlickrClient(BaseFetcher):
                         id=img_id,
                         source="flickr",
                         url_page=f"https://www.flickr.com/photo.gne?id={img_id}",
-                        url_original=_normalize_flickr_url(hi_res),
-                        url_thumb=_normalize_flickr_url(src),
+                        url_original=hi_res,
+                        url_thumb=normalized_src,
                         title=img.get("alt") or "",
                     )
                 )
