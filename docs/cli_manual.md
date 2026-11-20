@@ -1,4 +1,4 @@
-[← Back to Root Repository](../README.md)
+[← Back to Root Repository](../README.md) | [API Keys Guide](api_keys_guide.md) | [MCP Manual](mcp_manual.md)
 
 # stock-fetcher CLI Manual
 
@@ -144,6 +144,11 @@ When `--api-key` is omitted, the CLI reads provider credentials from environment
 | `pexels` | `PEXELS_API_KEY` | Yes |
 | `unsplash` | `UNSPLASH_API_KEY` | Yes |
 | `flickr` | None | No |
+
+A universal fallback variable `STOCK_FETCHER_API_KEY` is also checked if a provider-specific variable is unset.
+
+> [!TIP]
+> For detailed step-by-step instructions on obtaining free keys for each platform and configuring them permanently in `~/.zshrc` or `~/.bashrc`, see the [API Keys Guide](api_keys_guide.md).
 
 ---
 

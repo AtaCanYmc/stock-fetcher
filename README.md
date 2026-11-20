@@ -292,6 +292,10 @@ Configure provider API credentials using standard environment variables:
 | `PIXABAY_API_KEY` | Pixabay | API key issued from pixabay.com/api/docs |
 | `PEXELS_API_KEY` | Pexels | Authorization token issued from pexels.com/api |
 | `UNSPLASH_API_KEY` | Unsplash | Application Access Key issued from unsplash.com/developers |
+| `STOCK_FETCHER_API_KEY` | Global Fallback | Shared fallback credential checked when provider-specific variables are unset |
+
+> [!TIP]
+> For step-by-step instructions on obtaining free keys, portal registration links, rate limits, and shell export configuration (`~/.zshrc` / `~/.bashrc`), refer to the [API Keys Guide](docs/api_keys_guide.md).
 
 ---
 

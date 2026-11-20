@@ -1,4 +1,4 @@
-[← Back to Root Repository](../README.md)
+[← Back to Root Repository](../README.md) | [CLI Manual](cli_manual.md) | [API Keys Guide](api_keys_guide.md)
 
 # stock-fetcher MCP Manual
 
