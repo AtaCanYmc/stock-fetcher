@@ -50,12 +50,22 @@ class UnsplashClient(BaseFetcher):
             err_msg = err_msg.replace(self.api_key, "***")
         return err_msg
 
-    def search(self, term: str, limit: int = 15) -> List[StockImage]:
+    def search(
+        self,
+        term: str,
+        limit: int = 15,
+        page: int = 1,
+        cursor: Optional[str] = None,
+    ) -> List[StockImage]:
         if not self.api_key:
             raise AuthenticationError("Unsplash requires an API key (client_id).")
 
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=30)
-        cached = self._get_cached_results(clean_term, safe_limit)
+        clean_term, _ = self.sanitize_search_params(term, limit, max_limit=30)
+        safe_limit, norm_page, _ = self.normalize_pagination(
+            limit=limit, page=page, cursor=cursor, max_limit=30
+        )
+
+        cached = self._get_cached_results(clean_term, safe_limit, page=norm_page)
         if cached is not None:
             return cached
 
@@ -63,13 +73,14 @@ class UnsplashClient(BaseFetcher):
         params = {
             "query": clean_term,
             "per_page": safe_limit,
+            "page": norm_page,
             "client_id": self.api_key,
             "order_by": "relevant",
         }
 
         try:
             with httpx.Client(timeout=30.0) as client:
-                response = client.get(url, params=params)
+                response = self._request_with_retry(client, "GET", url, params=params)
                 if response.status_code in (401, 403):
                     raise AuthenticationError(
                         f"Authentication failed with status code {response.status_code}."
@@ -77,7 +88,7 @@ class UnsplashClient(BaseFetcher):
                 response.raise_for_status()
                 images = self._parse_payload(response.json())
                 self._save_cached_results(
-                    clean_term, safe_limit, images, response.headers
+                    clean_term, safe_limit, images, response.headers, page=norm_page
                 )
                 return images
         except httpx.HTTPError as e:
@@ -85,12 +96,22 @@ class UnsplashClient(BaseFetcher):
                 f"Failed to fetch from Unsplash: {self._mask_error(e)}"
             )
 
-    async def asearch(self, term: str, limit: int = 15) -> List[StockImage]:
+    async def asearch(
+        self,
+        term: str,
+        limit: int = 15,
+        page: int = 1,
+        cursor: Optional[str] = None,
+    ) -> List[StockImage]:
         if not self.api_key:
             raise AuthenticationError("Unsplash requires an API key (client_id).")
 
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=30)
-        cached = self._get_cached_results(clean_term, safe_limit)
+        clean_term, _ = self.sanitize_search_params(term, limit, max_limit=30)
+        safe_limit, norm_page, _ = self.normalize_pagination(
+            limit=limit, page=page, cursor=cursor, max_limit=30
+        )
+
+        cached = self._get_cached_results(clean_term, safe_limit, page=norm_page)
         if cached is not None:
             return cached
 
@@ -98,13 +119,16 @@ class UnsplashClient(BaseFetcher):
         params = {
             "query": clean_term,
             "per_page": safe_limit,
+            "page": norm_page,
             "client_id": self.api_key,
             "order_by": "relevant",
         }
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.get(url, params=params)
+                response = await self._arequest_with_retry(
+                    client, "GET", url, params=params
+                )
                 if response.status_code in (401, 403):
                     raise AuthenticationError(
                         f"Authentication failed with status code {response.status_code}."
@@ -112,7 +136,7 @@ class UnsplashClient(BaseFetcher):
                 response.raise_for_status()
                 images = self._parse_payload(response.json())
                 self._save_cached_results(
-                    clean_term, safe_limit, images, response.headers
+                    clean_term, safe_limit, images, response.headers, page=norm_page
                 )
                 return images
         except httpx.HTTPError as e:

@@ -151,13 +151,15 @@ def _execute_search(
     provider_name: str,
     term: str,
     limit: int,
+    page: int = 1,
+    cursor: Optional[str] = None,
     explicit_key: str = "",
     cache: Optional[BaseCache] = None,
 ) -> List[StockImage]:
     """Execute search against a single provider."""
     api_key = _resolve_api_key(provider_name, explicit_key)
     client = ClientFactory.get(provider_name, api_key=api_key, cache=cache)
-    return client.search(term, limit=limit)
+    return client.search(term, limit=limit, page=page, cursor=cursor)
 
 
 def _render_output(
@@ -289,6 +291,18 @@ def search(
         min=1,
         max=100,
     ),
+    page: int = typer.Option(
+        1,
+        "--page",
+        "-p",
+        help="Page number for pagination (1-indexed).",
+        min=1,
+    ),
+    cursor: Optional[str] = typer.Option(
+        None,
+        "--cursor",
+        help="Deterministic opaque pagination cursor token.",
+    ),
     api_key: str = typer.Option(
         "",
         "--api-key",
@@ -331,6 +345,8 @@ def search(
             ClientFactory.asearch_all(
                 term=term,
                 limit=limit,
+                page=page,
+                cursor=cursor,
                 cache=cache_backend,
             )
         )
@@ -347,7 +363,13 @@ def search(
     else:
         try:
             results = _execute_search(
-                provider_clean, term, limit, api_key, cache=cache_backend
+                provider_clean,
+                term,
+                limit,
+                page=page,
+                cursor=cursor,
+                explicit_key=api_key,
+                cache=cache_backend,
             )
         except AuthenticationError as e:
             env_var = PROVIDER_ENV_MAP.get(
@@ -401,6 +423,18 @@ def find(
         "-l",
         help="Maximum images per provider.",
     ),
+    page: int = typer.Option(
+        1,
+        "--page",
+        "-p",
+        help="Page number for pagination (1-indexed).",
+        min=1,
+    ),
+    cursor: Optional[str] = typer.Option(
+        None,
+        "--cursor",
+        help="Deterministic opaque pagination cursor token.",
+    ),
     format: str = typer.Option(
         "table",
         "--format",
@@ -430,6 +464,8 @@ def find(
         provider="all",
         term=term,
         limit=limit,
+        page=page,
+        cursor=cursor,
         api_key="",
         format=format,
         download=download,

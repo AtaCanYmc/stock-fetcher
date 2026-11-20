@@ -244,6 +244,40 @@ The caching layer automatically inspects upstream `Cache-Control: max-age=N` hea
 
 ---
 
+## Deterministic Pagination & Cursors
+
+`stock-fetcher` normalizes pagination semantics across all providers (page numbers, item offsets, and opaque tokens):
+
+```python
+from stock_fetcher import ClientFactory
+
+client = ClientFactory.get("wikimedia")
+
+# 1. Page-based search
+images = client.search("aurora", limit=5, page=2)
+
+# 2. Paginated result with deterministic next/prev cursors
+page_data = client.search_paginated("aurora", limit=5, page=1)
+print(f"Has more: {page_data.pagination.has_more}")
+print(f"Next cursor token: {page_data.pagination.next_cursor}")
+
+# 3. Next page via cursor token
+next_page = client.search_paginated(
+    "aurora", limit=5, cursor=page_data.pagination.next_cursor
+)
+```
+
+---
+
+## Adaptive Rate Limiting & Backoff
+
+All clients integrate an adaptive rate limiter that monitors upstream quota headers (`X-Ratelimit-Remaining`, `X-RateLimit-Limit`, `Retry-After`):
+- **Proactive Pacing**: Detects when remaining quota falls below safety thresholds (`remaining <= 1`) and paces requests before burst throttling occurs.
+- **Exponential Backoff**: Intercepts HTTP 429 and transient 503 errors, respecting upstream `Retry-After` headers or calculating exponential backoff with jitter.
+- **Safe Error Masking**: Sanitizes error messages to prevent credential leakage.
+
+---
+
 ## CLI Interface
 
 When installed with the `[cli]` extra, the package provides the `stock-fetcher` executable.

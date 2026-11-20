@@ -15,13 +15,22 @@ mcp = FastMCP("stock_fetcher")
 
 
 @mcp.tool()
-def search_images(provider: str, term: str, limit: int = 5, api_key: str = "") -> str:
+def search_images(
+    provider: str,
+    term: str,
+    limit: int = 5,
+    page: int = 1,
+    cursor: str = "",
+    api_key: str = "",
+) -> str:
     """Search for copyright-free images using a specified provider.
 
     Args:
         provider: The image provider ('pixabay', 'pexels', 'unsplash', 'flickr', 'wikimedia', 'openverse').
         term: Search query string (e.g. 'nature', 'city').
         limit: Maximum number of images to return (bounded between 1 and 30).
+        page: Page number for deterministic pagination (1-indexed).
+        cursor: Optional opaque deterministic cursor string.
         api_key: The API key for the provider. If omitted, attempts to read from env vars.
     """
     clean_provider = provider.strip().lower()
@@ -38,7 +47,12 @@ def search_images(provider: str, term: str, limit: int = 5, api_key: str = "") -
 
     try:
         client = ClientFactory.get(clean_provider, api_key=api_key)
-        images = client.search(clean_term, limit=safe_limit)
+        images = client.search(
+            clean_term,
+            limit=safe_limit,
+            page=page,
+            cursor=cursor if cursor else None,
+        )
 
         if not images:
             return f"No images found for '{clean_term}' on {clean_provider}."

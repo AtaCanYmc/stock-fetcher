@@ -148,9 +148,12 @@ class DiskCache(BaseCache):
                         pass
 
 
-def build_cache_key(provider: str, term: str, limit: int) -> str:
+def build_cache_key(provider: str, term: str, limit: int, page: int = 1) -> str:
     """Generate a deterministic cache key for a search request."""
-    return f"{provider.lower().strip()}:{term.lower().strip()}:{limit}"
+    base = f"{provider.lower().strip()}:{term.lower().strip()}:{limit}"
+    if page and page > 1:
+        return f"{base}:p{page}"
+    return base
 
 
 def parse_cache_control_ttl(headers: Any) -> Optional[int]:

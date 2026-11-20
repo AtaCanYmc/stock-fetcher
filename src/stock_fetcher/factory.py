@@ -69,6 +69,8 @@ class ClientFactory:
         cls,
         term: str,
         limit: int = 5,
+        page: int = 1,
+        cursor: Optional[str] = None,
         api_keys: Optional[Dict[str, str]] = None,
         cache: Optional[BaseCache] = None,
         providers: Optional[List[str]] = None,
@@ -78,6 +80,8 @@ class ClientFactory:
         Args:
             term: Search query term.
             limit: Maximum photos to return per provider.
+            page: 1-indexed page number for deterministic pagination.
+            cursor: Opaque cursor string for deterministic pagination.
             api_keys: Optional mapping of provider names to API keys.
             cache: Optional shared cache backend.
             providers: List of providers to query. Defaults to all registered providers.
@@ -98,7 +102,9 @@ class ClientFactory:
             )
             try:
                 client = cls.get(p_clean, api_key=api_key, cache=cache)
-                results = await client.asearch(term, limit=limit)
+                results = await client.asearch(
+                    term, limit=limit, page=page, cursor=cursor
+                )
                 return p_clean, results
             except (AuthenticationError, Exception):
                 # Suppress missing credentials or timeouts in multi-provider concurrent queries

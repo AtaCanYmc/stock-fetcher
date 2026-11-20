@@ -61,20 +61,33 @@ class OpenverseClient(BaseFetcher):
             )
         return results
 
-    def search(self, term: str, limit: int = 15) -> List[StockImage]:
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=100)
-        cached = self._get_cached_results(clean_term, safe_limit)
+    def search(
+        self,
+        term: str,
+        limit: int = 15,
+        page: int = 1,
+        cursor: Optional[str] = None,
+    ) -> List[StockImage]:
+        clean_term, _ = self.sanitize_search_params(term, limit, max_limit=100)
+        safe_limit, norm_page, _ = self.normalize_pagination(
+            limit=limit, page=page, cursor=cursor, max_limit=100
+        )
+
+        cached = self._get_cached_results(clean_term, safe_limit, page=norm_page)
         if cached is not None:
             return cached
 
         params = {
             "q": clean_term,
             "page_size": safe_limit,
+            "page": norm_page,
         }
 
         try:
             with httpx.Client(timeout=30.0, headers=self._get_headers()) as client:
-                response = client.get(self.base_url, params=params)
+                response = self._request_with_retry(
+                    client, "GET", self.base_url, params=params
+                )
                 if response.status_code in (401, 403):
                     raise AuthenticationError(
                         f"Openverse authentication failed with status code {response.status_code}."
@@ -82,7 +95,7 @@ class OpenverseClient(BaseFetcher):
                 response.raise_for_status()
                 images = self._parse_payload(response.json())
                 self._save_cached_results(
-                    clean_term, safe_limit, images, response.headers
+                    clean_term, safe_limit, images, response.headers, page=norm_page
                 )
                 return images
         except httpx.HTTPError as e:
@@ -90,22 +103,35 @@ class OpenverseClient(BaseFetcher):
                 f"Failed to fetch from Openverse: {self._mask_error(e)}"
             )
 
-    async def asearch(self, term: str, limit: int = 15) -> List[StockImage]:
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=100)
-        cached = self._get_cached_results(clean_term, safe_limit)
+    async def asearch(
+        self,
+        term: str,
+        limit: int = 15,
+        page: int = 1,
+        cursor: Optional[str] = None,
+    ) -> List[StockImage]:
+        clean_term, _ = self.sanitize_search_params(term, limit, max_limit=100)
+        safe_limit, norm_page, _ = self.normalize_pagination(
+            limit=limit, page=page, cursor=cursor, max_limit=100
+        )
+
+        cached = self._get_cached_results(clean_term, safe_limit, page=norm_page)
         if cached is not None:
             return cached
 
         params = {
             "q": clean_term,
             "page_size": safe_limit,
+            "page": norm_page,
         }
 
         try:
             async with httpx.AsyncClient(
                 timeout=30.0, headers=self._get_headers()
             ) as client:
-                response = await client.get(self.base_url, params=params)
+                response = await self._arequest_with_retry(
+                    client, "GET", self.base_url, params=params
+                )
                 if response.status_code in (401, 403):
                     raise AuthenticationError(
                         f"Openverse authentication failed with status code {response.status_code}."
@@ -113,7 +139,7 @@ class OpenverseClient(BaseFetcher):
                 response.raise_for_status()
                 images = self._parse_payload(response.json())
                 self._save_cached_results(
-                    clean_term, safe_limit, images, response.headers
+                    clean_term, safe_limit, images, response.headers, page=norm_page
                 )
                 return images
         except httpx.HTTPError as e:

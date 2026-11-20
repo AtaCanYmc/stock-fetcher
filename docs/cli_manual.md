@@ -79,6 +79,8 @@ stock-fetcher search [OPTIONS] PROVIDER TERM
 | Flag | Short | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `--limit` | `-l` | `5` | Maximum images to fetch per provider. |
+| `--page` | `-p` | `1` | 1-indexed page number for deterministic pagination. |
+| `--cursor` | | None | Opaque pagination cursor token. |
 | `--api-key` | `-k` | None | Explicit provider authentication token. |
 | `--format` | `-f` | `table` | Output format: `table`, `json`, `csv`, or `urls`. |
 | `--download` | `-d` | `false` | Automatically download fetched images to disk. |

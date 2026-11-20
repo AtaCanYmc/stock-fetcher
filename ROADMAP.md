@@ -20,11 +20,11 @@ This document outlines planned technical milestones and architecture enhancement
 
 ---
 
-## v0.4.0: Provider Coverage and Resiliency
+## v0.4.0: Provider Coverage and Resiliency (Completed)
 
 - [x] **Extended Provider Ecosystem**: Added client integrations for Wikimedia Commons (MediaWiki API) and Openverse (WordPress Openverse API) supporting async streaming, caching, and open-access queries.
-- **Deterministic Pagination Cursors**: Normalize page and offset cursors across heterogeneous provider interfaces.
-- **Adaptive Rate Limit Handling**: Implement exponential backoff and rate limit header parsing (`X-Ratelimit-Remaining`) to prevent burst throttling.
+- [x] **Deterministic Pagination Cursors**: Standardized page and offset cursor normalization (`encode_cursor`, `decode_cursor`, `PaginatedResult`) across Pexels, Pixabay, Unsplash, Openverse, Wikimedia (`gsroffset`), and Flickr.
+- [x] **Adaptive Rate Limit Handling**: Added case-insensitive header parsing (`X-Ratelimit-Remaining`, `Retry-After`), proactive adaptive pacing before exhaustion, and exponential backoff retry on HTTP 429 status codes.
 
 ---
 

@@ -10,10 +10,22 @@ from .exceptions import (
     APIConnectionError,
     AuthenticationError,
     ProviderNotFoundError,
+    RateLimitExceededError,
     StockFetcherError,
 )
 from .factory import ClientFactory
 from .models import StockImage
+from .pagination import (
+    PaginatedResult,
+    PaginationMetadata,
+    decode_cursor,
+    encode_cursor,
+    normalize_pagination,
+)
+from .rate_limit import (
+    AdaptiveRateLimiter,
+    RateLimitInfo,
+)
 
 __version__ = "0.3.0"
 
@@ -31,8 +43,16 @@ __all__ = [
     "BaseCache",
     "MemoryCache",
     "DiskCache",
+    "PaginatedResult",
+    "PaginationMetadata",
+    "encode_cursor",
+    "decode_cursor",
+    "normalize_pagination",
+    "RateLimitInfo",
+    "AdaptiveRateLimiter",
     "StockFetcherError",
     "APIConnectionError",
+    "RateLimitExceededError",
     "AuthenticationError",
     "ProviderNotFoundError",
     "__version__",

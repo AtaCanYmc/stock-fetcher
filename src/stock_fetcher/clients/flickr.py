@@ -65,39 +65,71 @@ class FlickrClient(BaseFetcher):
 
         return images
 
-    def search(self, term: str, limit: int = 15) -> List[StockImage]:
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=50)
-        cached = self._get_cached_results(clean_term, safe_limit)
+    def search(
+        self,
+        term: str,
+        limit: int = 15,
+        page: int = 1,
+        cursor: Optional[str] = None,
+    ) -> List[StockImage]:
+        clean_term, _ = self.sanitize_search_params(term, limit, max_limit=50)
+        safe_limit, norm_page, _ = self.normalize_pagination(
+            limit=limit, page=page, cursor=cursor, max_limit=50
+        )
+
+        cached = self._get_cached_results(clean_term, safe_limit, page=norm_page)
         if cached is not None:
             return cached
 
-        params = {"text": clean_term, "license": "4,5,6,9,10"}
+        params = {
+            "text": clean_term,
+            "license": "4,5,6,9,10",
+            "page": norm_page,
+        }
         try:
             with httpx.Client(headers=self.headers, timeout=30.0) as client:
-                response = client.get(self.base_url, params=params)
+                response = self._request_with_retry(
+                    client, "GET", self.base_url, params=params
+                )
                 response.raise_for_status()
                 images = self._parse_html(response.text, safe_limit)
                 self._save_cached_results(
-                    clean_term, safe_limit, images, response.headers
+                    clean_term, safe_limit, images, response.headers, page=norm_page
                 )
                 return images
         except httpx.HTTPError as e:
             raise APIConnectionError(f"Failed to fetch from Flickr: {e}")
 
-    async def asearch(self, term: str, limit: int = 15) -> List[StockImage]:
-        clean_term, safe_limit = self.sanitize_search_params(term, limit, max_limit=50)
-        cached = self._get_cached_results(clean_term, safe_limit)
+    async def asearch(
+        self,
+        term: str,
+        limit: int = 15,
+        page: int = 1,
+        cursor: Optional[str] = None,
+    ) -> List[StockImage]:
+        clean_term, _ = self.sanitize_search_params(term, limit, max_limit=50)
+        safe_limit, norm_page, _ = self.normalize_pagination(
+            limit=limit, page=page, cursor=cursor, max_limit=50
+        )
+
+        cached = self._get_cached_results(clean_term, safe_limit, page=norm_page)
         if cached is not None:
             return cached
 
-        params = {"text": clean_term, "license": "4,5,6,9,10"}
+        params = {
+            "text": clean_term,
+            "license": "4,5,6,9,10",
+            "page": norm_page,
+        }
         try:
             async with httpx.AsyncClient(headers=self.headers, timeout=30.0) as client:
-                response = await client.get(self.base_url, params=params)
+                response = await self._arequest_with_retry(
+                    client, "GET", self.base_url, params=params
+                )
                 response.raise_for_status()
                 images = self._parse_html(response.text, safe_limit)
                 self._save_cached_results(
-                    clean_term, safe_limit, images, response.headers
+                    clean_term, safe_limit, images, response.headers, page=norm_page
                 )
                 return images
         except httpx.HTTPError as e:
