@@ -22,6 +22,17 @@ class EndToEndCLITest(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
+    @staticmethod
+    def _combined_output(result) -> str:
+        """Extract output handling both mix_stderr=True and mix_stderr=False."""
+        output = result.stdout or ""
+        try:
+            if result.stderr:
+                output += "\n" + result.stderr
+        except ValueError:
+            pass
+        return output
+
     def test_e2e_cli_version(self):
         result = self.runner.invoke(app, ["version"])
         self.assertEqual(result.exit_code, 0)
@@ -202,7 +213,10 @@ class EndToEndCLITest(unittest.TestCase):
                 ],
             )
             self.assertNotEqual(result_scheme.exit_code, 0)
-            self.assertIn("Disallowed protocol scheme", result_scheme.stdout)
+            self.assertIn(
+                "Disallowed protocol scheme",
+                self._combined_output(result_scheme),
+            )
 
     def test_e2e_mcp_tool_execution(self):
         sample_img = StockImage(
