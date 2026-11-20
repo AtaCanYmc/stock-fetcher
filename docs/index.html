@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Unified copyright-free stock photography search and download CLI, Python SDK, and MCP server for Pexels, Pixabay, Unsplash, and Flickr.">
+  <meta name="theme-color" content="#07080a">
+  <meta property="og:title" content="stock-fetcher | Unified Stock Photography Engine">
+  <meta property="og:description" content="Asynchronous, zero-config, and cached copyright-free stock image search for terminals, codebases, and AI agents.">
+  <meta property="og:type" content="website">
+  <title>stock-fetcher — Unified Stock Photography Engine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+  <!-- Sticky Frosted Navigation -->
+  <header class="header-nav">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <img src="assets/logo.png" alt="stock-fetcher logo" width="32" height="32">
+        <span>stock-fetcher</span>
+      </a>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#terminal">Terminal</a></li>
+          <li><a href="#capabilities">Capabilities</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#code">Code</a></li>
+          <li><a href="api_keys_guide.md">API Keys</a></li>
+          <li><a href="cli_manual.md">CLI Manual</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/AtaCanYmc/stock-fetcher" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="#install" class="btn btn-primary">Install</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Landmark -->
+  <main>
+    <!-- Hero Section -->
+    <section id="overview" class="hero-section">
+      <a href="https://github.com/AtaCanYmc/stock-fetcher/releases" class="hero-pill" target="_blank" rel="noopener noreferrer">
+        <span>v0.2.0 Released</span>
+        <span>•</span>
+        <span>Homebrew &amp; PyPI Ready</span>
+      </a>
+
+      <h1 class="hero-title">The Unified Stock Engine for Terminals and AI Agents</h1>
+      <p class="hero-subtitle">
+        Search, filter, and stream copyright-free photography across Pexels, Pixabay, Unsplash, and Flickr with zero friction. One unified interface with non-blocking async execution, intelligent caching, and Model Context Protocol support.
+      </p>
+
+      <!-- Quick Install Box -->
+      <div id="install" class="hero-install-box">
+        <div class="install-tabs" role="tablist" aria-label="Installation Methods">
+          <button type="button" class="install-tab-btn" role="tab" aria-selected="true" data-tab="homebrew">Homebrew (Tap)</button>
+          <button type="button" class="install-tab-btn" role="tab" aria-selected="false" data-tab="pip">pip [cli]</button>
+          <button type="button" class="install-tab-btn" role="tab" aria-selected="false" data-tab="pip-all">pip [all]</button>
+        </div>
+        <div class="install-command-row">
+          <code id="install-code" class="install-command-code">brew tap AtaCanYmc/tap &amp;&amp; brew install stock-fetcher</code>
+          <button type="button" class="copy-btn" id="hero-copy-btn" data-copy-target="install-code" aria-label="Copy installation command">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#terminal" class="btn btn-primary">Try Interactive CLI</a>
+        <a href="cli_manual.md" class="btn btn-secondary">Read CLI Manual</a>
+        <a href="api_keys_guide.md" class="btn btn-secondary">Get API Keys</a>
+      </div>
+    </section>
+
+    <!-- Interactive Terminal Simulation -->
+    <section id="terminal" class="terminal-section" aria-label="Interactive Terminal Simulation">
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-controls">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+          </div>
+          <span class="terminal-title">zsh — stock-fetcher v0.2.0</span>
+          <div style="width: 50px;"></div>
+        </div>
+
+        <div class="terminal-actions-bar">
+          <span style="font-size: 0.78rem; color: var(--color-text-muted); align-self: center; margin-right: 0.5rem;">Run Preset:</span>
+          <button type="button" class="terminal-chip active" data-action="find">find "cyberpunk neon"</button>
+          <button type="button" class="terminal-chip" data-action="flickr">search flickr "alpine lake"</button>
+          <button type="button" class="terminal-chip" data-action="keys">keys (credential audit)</button>
+          <button type="button" class="terminal-chip" data-action="providers">providers (status check)</button>
+        </div>
+
+        <div class="terminal-body">
+          <div style="margin-bottom: 0.5rem;">
+            <span class="terminal-prompt">$ </span>
+            <span id="terminal-cmd" class="terminal-cmd">stock-fetcher find 'cyberpunk neon' --limit 3</span>
+          </div>
+          <div id="terminal-output" class="terminal-output"><span style="color:var(--color-text-muted);"># Concurrent multi-provider query (httpx + asyncio.gather)</span>
+<span style="color:var(--color-accent); font-weight:700;">Querying Pexels, Pixabay, Unsplash, and Flickr simultaneously...</span>
+
+<span style="color:var(--color-code-green); font-weight:700;">✓ Pixabay</span> (3 results in 0.28s)
+  • ID 841291  "Cyberpunk neon street Tokyo"   (1920x1080)
+  • ID 941022  "Futuristic cyberpunk alley"    (2560x1440)
+  • ID 731109  "Neon lights and wet pavement"  (3840x2160)
+
+<span style="color:var(--color-code-green); font-weight:700;">✓ Flickr</span> (3 results in 0.34s) - <span style="color:var(--color-text-muted);">Zero-Config Scraper</span>
+  • ID 408765  "Hong Kong neon skyline"        (Original CC)
+  • ID 426852  "Cyberpunk street reflection"   (Original CC)
+  • ID 152237  "Night cyberpunk rain passage"  (Original CC)
+
+<span style="color:var(--color-code-green); font-weight:700;">✓ Pexels</span> (3 results in 0.31s)
+  • ID 210984  "Cyberpunk arcade corridor"     (High-Res)
+  • ID 339102  "Hologram street signage"       (High-Res)
+
+<span style="color:var(--color-code-magenta); font-weight:700;">Success:</span> Retrieved 9 validated StockImage models across 3 active engines in 0.35s total.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Capabilities Bento Grid -->
+    <section id="capabilities" class="bento-section">
+      <div class="section-header">
+        <span class="section-badge">Architecture &amp; Features</span>
+        <h2 class="section-title">Engineered for Developer Velocity</h2>
+        <p class="section-desc">
+          Designed from the ground up for high-throughput scripting, resilient terminal workflows, and autonomous AI agents.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Card 1 -->
+        <div class="bento-card col-8">
+          <div>
+            <div class="bento-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <h3 class="bento-title">Non-Blocking Asynchronous Concurrency</h3>
+            <p class="bento-text">
+              Powered by <code>httpx</code> and <code>asyncio.gather</code>. Execute concurrent queries across Pexels, Pixabay, Unsplash, and Flickr simultaneously with unified timeout handling and graceful partial fallback.
+            </p>
+          </div>
+          <div class="bento-meta">
+            <span>Core: ClientFactory.asearch_all()</span>
+            <span>Latency: &lt; 380ms</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bento-card col-4">
+          <div>
+            <div class="bento-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <h3 class="bento-title">Zero-Config Flickr Scraper</h3>
+            <p class="bento-text">
+              Query Creative Commons licensed media immediately without registering developer accounts, creating API keys, or passing tokens.
+            </p>
+          </div>
+          <div class="bento-meta">
+            <span>Mode: HTML Scraper</span>
+            <span>Auth: Not Required</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bento-card col-4">
+          <div>
+            <div class="bento-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            </div>
+            <h3 class="bento-title">Multi-Tier Caching Layer</h3>
+            <p class="bento-text">
+              Configurable <code>MemoryCache</code> and persistent <code>DiskCache</code> respecting upstream HTTP <code>Cache-Control: max-age=N</code> headers and custom TTL settings.
+            </p>
+          </div>
+          <div class="bento-meta">
+            <span>Storage: RAM &amp; Disk</span>
+            <span>TTL: Automatic</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bento-card col-4">
+          <div>
+            <div class="bento-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <h3 class="bento-title">Pydantic Schema Guarantees</h3>
+            <p class="bento-text">
+              Migrated from raw dictionaries to validated <code>StockImage</code> models with full IDE autocomplete, type safety, and backwards-compatible dictionary subscripting.
+            </p>
+          </div>
+          <div class="bento-meta">
+            <span>Validation: Pydantic v2</span>
+            <span>Backwards-Compatible: Yes</span>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="bento-card col-4">
+          <div>
+            <div class="bento-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </div>
+            <h3 class="bento-title">Model Context Protocol (MCP)</h3>
+            <p class="bento-text">
+              Run as a native FastMCP stdio server to empower AI agents in Claude Desktop, Cursor, and Antigravity with live stock image search tools.
+            </p>
+          </div>
+          <div class="bento-meta">
+            <span>Protocol: MCP stdio</span>
+            <span>Extra: [mcp]</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Curated Photography Gallery (Real Photos Fetched by stock-fetcher) -->
+    <section id="gallery" class="gallery-section">
+      <div class="section-header">
+        <span class="section-badge">Live Asset Showcase</span>
+        <h2 class="section-title">Fetched Directly via stock-fetcher CLI</h2>
+        <p class="section-desc">
+          These copyright-free photographs were discovered, retrieved, and downloaded into this showcase using our integrated CLI scraper and client tools.
+        </p>
+      </div>
+
+      <div class="gallery-grid">
+        <!-- Item 1 (LCP Hero Candidate with fetchpriority="high") -->
+        <article class="gallery-item">
+          <div class="gallery-thumb-wrap">
+            <span class="gallery-source-tag">Flickr CC</span>
+            <img src="assets/gallery/mountain_mist.jpg" alt="Alpine Mountain Mist at Sunrise" fetchpriority="high" width="600" height="375">
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-title">Alpine Mountain Mist</h3>
+            <p class="gallery-desc">Atmospheric alpine mountain ridges veiled in early morning mist.</p>
+            <div class="gallery-meta">
+              <span>Query: "alpine mountain mist"</span>
+              <span>306.5 KB</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 2 -->
+        <article class="gallery-item">
+          <div class="gallery-thumb-wrap">
+            <span class="gallery-source-tag">Flickr CC</span>
+            <img src="assets/gallery/architecture_glass.jpg" alt="Minimalist Glass Architecture Facade" loading="lazy" width="600" height="375">
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-title">Architectural Glass Grid</h3>
+            <p class="gallery-desc">Clean modern facade reflecting sky gradients with geometric precision.</p>
+            <div class="gallery-meta">
+              <span>Query: "minimalist architecture"</span>
+              <span>290.6 KB</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 3 -->
+        <article class="gallery-item">
+          <div class="gallery-thumb-wrap">
+            <span class="gallery-source-tag">Flickr CC</span>
+            <img src="assets/gallery/geometry_concrete.jpg" alt="Geometric Concrete Structure" loading="lazy" width="600" height="375">
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-title">Concrete Symmetry</h3>
+            <p class="gallery-desc">Brutalist architectural angles and tactile shadows.</p>
+            <div class="gallery-meta">
+              <span>Query: "minimalist architecture"</span>
+              <span>131.7 KB</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 4 -->
+        <article class="gallery-item">
+          <div class="gallery-thumb-wrap">
+            <span class="gallery-source-tag">Flickr CC</span>
+            <img src="assets/gallery/alpine_peak.jpg" alt="High Alpine Peak and Clouds" loading="lazy" width="600" height="375">
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-title">High Alpine Peak</h3>
+            <p class="gallery-desc">Dramatic limestone summit breaking through low cloud cover.</p>
+            <div class="gallery-meta">
+              <span>Query: "alpine mountain mist"</span>
+              <span>77.7 KB</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 5 -->
+        <article class="gallery-item">
+          <div class="gallery-thumb-wrap">
+            <span class="gallery-source-tag">Flickr CC</span>
+            <img src="assets/gallery/ocean_waves.jpg" alt="Aerial Ocean Waves" loading="lazy" width="600" height="375">
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-title">Aerial Coastal Foam</h3>
+            <p class="gallery-desc">Dynamic emerald surf breaking along an open shoreline.</p>
+            <div class="gallery-meta">
+              <span>Query: "ocean waves aerial"</span>
+              <span>158.8 KB</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 6 -->
+        <article class="gallery-item">
+          <div class="gallery-thumb-wrap">
+            <span class="gallery-source-tag">Flickr CC</span>
+            <img src="assets/gallery/milky_way.jpg" alt="Milky Way Astrophotography" loading="lazy" width="600" height="375">
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-title">Milky Way Cosmic Core</h3>
+            <p class="gallery-desc">Deep night sky exposure detailing starry clusters and nebulae.</p>
+            <div class="gallery-meta">
+              <span>Query: "milky way night sky"</span>
+              <span>250.0 KB</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Code & Architecture Showcase -->
+    <section id="code" class="code-section">
+      <div class="section-header">
+        <span class="section-badge">Developer Integration</span>
+        <h2 class="section-title">One Consistent API Surface</h2>
+        <p class="section-desc">
+          Seamlessly transition between Python script, asynchronous coroutine, shell pipeline, and AI tool.
+        </p>
+      </div>
+
+      <div class="code-tabs-box">
+        <div class="code-tablist" role="tablist" aria-label="Code Implementation Examples">
+          <button type="button" class="code-tab-btn" role="tab" aria-selected="true" aria-controls="panel-python">Python SDK</button>
+          <button type="button" class="code-tab-btn" role="tab" aria-selected="false" aria-controls="panel-async">Async Multi-Search</button>
+          <button type="button" class="code-tab-btn" role="tab" aria-selected="false" aria-controls="panel-cli">CLI Pipelines</button>
+          <button type="button" class="code-tab-btn" role="tab" aria-selected="false" aria-controls="panel-mcp">MCP Agent Server</button>
+        </div>
+
+        <!-- Panel 1: Python -->
+        <div id="panel-python" class="code-panel" role="tabpanel" tabindex="0">
+<pre><code>from stock_fetcher import ClientFactory, MemoryCache
+
+# 1. Instantiate with in-memory caching
+cache = MemoryCache(default_ttl=3600)
+client = ClientFactory.get("pexels", api_key="YOUR_KEY", cache=cache)
+
+# 2. Search returns validated Pydantic models
+images = client.search(term="neon reflections", limit=5)
+for img in images:
+    print(f"[{img.source.upper()}] {img.title} -> {img.url_original}")</code></pre>
+        </div>
+
+        <!-- Panel 2: Async -->
+        <div id="panel-async" class="code-panel" role="tabpanel" tabindex="0" hidden>
+<pre><code>import asyncio
+from stock_fetcher import ClientFactory
+
+async def main():
+    # Execute non-blocking parallel search across 4 engines
+    results = await ClientFactory.asearch_all(
+        term="nordic winter landscape",
+        limit_per_provider=3
+    )
+    for provider, images in results.items():
+        print(f"Provider: {provider} returned {len(images)} images")
+
+asyncio.run(main())</code></pre>
+        </div>
+
+        <!-- Panel 3: CLI -->
+        <div id="panel-cli" class="code-panel" role="tabpanel" tabindex="0" hidden>
+<pre><code># Concurrent search piped to table or JSON
+stock-fetcher find "cyberpunk neon city" --limit 3 --format table
+
+# Zero-config Flickr query extracting original URLs for xargs
+stock-fetcher search flickr "classic aircraft" -l 5 -f urls | xargs -n 1 curl -O
+
+# Automated batch download with path traversal defense
+stock-fetcher search flickr "alpine lake" -l 3 -d -o ./downloads</code></pre>
+        </div>
+
+        <!-- Panel 4: MCP -->
+        <div id="panel-mcp" class="code-panel" role="tabpanel" tabindex="0" hidden>
+<pre><code>// Claude Desktop or Antigravity config (~/.config/claude/claude_desktop_config.json)
+{
+  "mcpServers": {
+    "stock_fetcher": {
+      "command": "python",
+      "args": ["-m", "stock_fetcher.mcp.server"],
+      "env": {
+        "PEXELS_API_KEY": "YOUR_KEY",
+        "PIXABAY_API_KEY": "YOUR_KEY",
+        "UNSPLASH_API_KEY": "YOUR_KEY"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h4>stock-fetcher</h4>
+        <p>
+          Unified, asynchronous, and cached stock photography search engine for terminals, applications, and AI agent environments.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Documentation</h5>
+        <ul>
+          <li><a href="api_keys_guide.md">API Keys Guide</a></li>
+          <li><a href="cli_manual.md">CLI Manual</a></li>
+          <li><a href="mcp_manual.md">MCP Manual</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher#architecture" target="_blank" rel="noopener noreferrer">Architecture</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Distribution</h5>
+        <ul>
+          <li><a href="https://github.com/AtaCanYmc/homebrew-tap" target="_blank" rel="noopener noreferrer">Homebrew Tap</a></li>
+          <li><a href="https://pypi.org/project/stock-fetcher/" target="_blank" rel="noopener noreferrer">PyPI Package</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/releases" target="_blank" rel="noopener noreferrer">Releases &amp; Tags</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Project Governance</h5>
+        <ul>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache 2.0 License</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security Policy</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contributing</a></li>
+          <li><a href="https://github.com/AtaCanYmc/stock-fetcher/blob/main/ROADMAP.md" target="_blank" rel="noopener noreferrer">Roadmap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>Copyright &copy; 2026 AtaCanYmc. Licensed under Apache-2.0.</span>
+      <span>Engineered with anti-slop principles &amp; modern web guidance.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
