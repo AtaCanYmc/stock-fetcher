@@ -1,0 +1,24 @@
+# stock-fetcher
+
+> Unified copyright-free stock photography search and download CLI, Python SDK, and Model Context Protocol (MCP) server for Pexels, Pixabay, Unsplash, and Flickr.
+
+## Core Capabilities
+- Non-blocking asynchronous HTTP querying across multiple providers using httpx.
+- Zero-configuration Flickr scraper targeting Creative Commons licensed media.
+- Multi-tier in-memory and disk caching honoring HTTP Cache-Control headers.
+- Strongly typed Pydantic v2 response schemas (StockImage).
+- Built-in FastMCP stdio server for AI agents in Claude Desktop, Cursor, and Antigravity.
+
+## Installation
+- Homebrew: `brew tap AtaCanYmc/tap && brew install stock-fetcher`
+- Python: `pip install stock-fetcher[all]`
+
+## Documentation & Manuals
+- [Home & Live Showcase](https://atacanymc.github.io/stock-fetcher/): Interactive terminal simulator and asset gallery.
+- [API Keys Guide](https://atacanymc.github.io/stock-fetcher/api_keys_guide.html): Step-by-step instructions for obtaining free provider keys.
+- [CLI Manual](https://atacanymc.github.io/stock-fetcher/cli_manual.html): Complete command arguments, options, and shell recipes.
+- [MCP Manual](https://atacanymc.github.io/stock-fetcher/mcp_manual.html): Configuration guide for AI agent integrations.
+
+## Repository
+- Source Code: https://github.com/AtaCanYmc/stock-fetcher
+- License: Apache 2.0

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://atacanymc.github.io/stock-fetcher/sitemap.xml
