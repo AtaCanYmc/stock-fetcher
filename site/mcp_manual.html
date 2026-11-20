@@ -152,14 +152,35 @@
               <td>String</td>
               <td>No</td>
               <td><code>"pixabay"</code></td>
-              <td>Provider name: <code>pixabay</code>, <code>pexels</code>, <code>unsplash</code>, <code>flickr</code>.</td>
+              <td>Provider name: <code>pixabay</code>, <code>pexels</code>, <code>unsplash</code>, <code>flickr</code>, <code>wikimedia</code>, <code>openverse</code>.</td>
             </tr>
             <tr>
               <td><code>limit</code></td>
               <td>Integer</td>
               <td>No</td>
               <td><code>5</code></td>
-              <td>Maximum number of results to return (clamped 1&ndash;100).</td>
+              <td>Maximum number of results to return (clamped 1&ndash;30).</td>
+            </tr>
+            <tr>
+              <td><code>page</code></td>
+              <td>Integer</td>
+              <td>No</td>
+              <td><code>1</code></td>
+              <td>1-indexed page number for deterministic pagination.</td>
+            </tr>
+            <tr>
+              <td><code>cursor</code></td>
+              <td>String</td>
+              <td>No</td>
+              <td><code>""</code></td>
+              <td>Optional opaque deterministic cursor token.</td>
+            </tr>
+            <tr>
+              <td><code>api_key</code></td>
+              <td>String</td>
+              <td>No</td>
+              <td><code>""</code></td>
+              <td>Explicit provider token (overrides environment variables).</td>
             </tr>
           </tbody>
         </table>

@@ -107,10 +107,13 @@ make lint
 # 2. Run Ruff format check
 make format-check
 
-# 3. Verify internal markdown links
+# 3. Run full unit and integration test suite
+make test
+
+# 4. Verify internal markdown links
 make validate-links
 
-# 4. Verify distribution build
+# 5. Verify distribution build
 make build
 ```
 

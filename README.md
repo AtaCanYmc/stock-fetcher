@@ -4,13 +4,13 @@
 
 # stock-fetcher
 
-Unified Python client, CLI utility, and Model Context Protocol (MCP) server for retrieving copyright-free images from Pexels, Pixabay, Unsplash, and Flickr.
+Unified Python client, CLI utility, and Model Context Protocol (MCP) server for retrieving copyright-free images from Pexels, Pixabay, Unsplash, Flickr, Wikimedia Commons, and Openverse.
 
 <p align="center">
   <a href="https://github.com/AtaCanYmc/stock-fetcher/actions/workflows/ci.yml">
     <img src="https://github.com/AtaCanYmc/stock-fetcher/actions/workflows/ci.yml/badge.svg" alt="CI Status">
   </a>
-  <a href="https://atacanyymc.github.io/stock-fetcher/">
+  <a href="https://atacanymc.github.io/stock-fetcher/">
     <img src="https://img.shields.io/badge/Showcase-GitHub_Pages-00d2ff.svg" alt="Showcase Site">
   </a>
   <a href="https://opensource.org/licenses/Apache-2.0">
@@ -41,6 +41,8 @@ Unified Python client, CLI utility, and Model Context Protocol (MCP) server for 
 - [Quick Start](#quick-start)
 - [Asynchronous & Concurrent Queries](#asynchronous--concurrent-queries)
 - [Response Caching](#response-caching)
+- [Deterministic Pagination & Cursors](#deterministic-pagination--cursors)
+- [Adaptive Rate Limiting & Backoff](#adaptive-rate-limiting--backoff)
 - [CLI Interface](#cli-interface)
 - [MCP Server for AI Agents](#mcp-server-for-ai-agents)
 - [Environment Configuration](#environment-configuration)
@@ -352,11 +354,13 @@ classDiagram
     class Exception
     class StockFetcherError
     class APIConnectionError
+    class RateLimitExceededError
     class AuthenticationError
     class ProviderNotFoundError
 
     Exception <|-- StockFetcherError
     StockFetcherError <|-- APIConnectionError
+    APIConnectionError <|-- RateLimitExceededError
     StockFetcherError <|-- AuthenticationError
     StockFetcherError <|-- ProviderNotFoundError
 ```
@@ -395,6 +399,8 @@ except StockFetcherError as err:
 >
 > - **Pexels / Pixabay / Unsplash**: Commercial and non-commercial use is generally permitted under their respective terms. Re-selling unaltered copies, constructing competing image services, or displaying identifiable persons in defamatory contexts is strictly prohibited.
 > - **Flickr**: Images are governed by distinct Creative Commons licenses. This scraper filters for permissive licenses, but you must inspect the source URL (`url_page`) and verify the exact attribution obligations prior to public or commercial deployment.
+> - **Wikimedia Commons**: Media is licensed under diverse open licenses (Creative Commons CC BY, CC BY-SA, or Public Domain). Specific license names are extracted and exposed in `extra["license"]`.
+> - **Openverse**: Images are cataloged under Creative Commons licenses and public domain marks. Attribution strings are parsed and exposed in `extra["attribution"]`.
 >
 > Maintainers of `stock-fetcher` assume no legal liability for intellectual property disputes resulting from fetched content.
 
@@ -406,6 +412,12 @@ The `stock-fetcher` codebase is licensed under the [Apache 2.0 License](LICENSE)
 
 ### Why does the Flickr provider use web scraping rather than the official API?
 The official Flickr API requires an approved developer key and consumer secret with active OAuth handshakes. The web scraper parses Creative Commons search result markup directly using `BeautifulSoup4`. This enables immediate zero-configuration queries without developer account registration.
+
+### How do Wikimedia Commons and Openverse integrations work?
+Wikimedia Commons uses the open MediaWiki Action API with generator searches in namespace 6 (`File:`), requiring no authentication tokens. Openverse queries the WordPress Foundation Openverse REST API under the public tier; an optional Bearer token via `OPENVERSE_API_KEY` can be supplied for higher throughput.
+
+### How does adaptive rate limiting protect against HTTP 429 errors?
+The internal `AdaptiveRateLimiter` parses rate limit headers (`X-Ratelimit-Remaining`, `Retry-After`) across all providers. If remaining quota drops to 1, it inserts a proactive pacing pause. If HTTP 429 occurs, it automatically applies exponential backoff with jitter and retries up to 3 times before raising `RateLimitExceededError`.
 
 ### Are network calls asynchronous?
 Yes. All clients support non-blocking asynchronous requests via `await client.asearch(...)` powered by `httpx`. In addition, `await ClientFactory.asearch_all(...)` executes concurrent queries across multiple providers in parallel using `asyncio.gather`. Synchronous `client.search(...)` remains fully supported.

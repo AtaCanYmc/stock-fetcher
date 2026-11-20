@@ -44,8 +44,11 @@ Searches for copyright-free images using the specified provider.
 | Parameter | Type | Required | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `term` | String | Yes | None | Image search query. |
-| `provider` | String | No | `"pixabay"` | Provider name: `pixabay`, `pexels`, `unsplash`, `flickr`. |
-| `limit` | Integer | No | `5` | Maximum number of results to return. |
+| `provider` | String | No | `"pixabay"` | Provider name: `pixabay`, `pexels`, `unsplash`, `flickr`, `wikimedia`, `openverse`. |
+| `limit` | Integer | No | `5` | Maximum number of results to return (clamped 1&ndash;30). |
+| `page` | Integer | No | `1` | 1-indexed page number for deterministic pagination. |
+| `cursor` | String | No | `""` | Optional opaque deterministic cursor string. |
+| `api_key` | String | No | `""` | Explicit provider token (overrides environment variables). |
 
 ---
 
