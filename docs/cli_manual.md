@@ -71,7 +71,7 @@ stock-fetcher search [OPTIONS] PROVIDER TERM
 
 | Argument | Choices | Description |
 | :--- | :--- | :--- |
-| `PROVIDER` | `pixabay`, `pexels`, `unsplash`, `flickr`, `all` | Target provider or `all`. |
+| `PROVIDER` | `pixabay`, `pexels`, `unsplash`, `flickr`, `wikimedia`, `openverse`, `all` | Target provider or `all`. |
 | `TERM` | String | Search query term (e.g. `"mountain lake"`). |
 
 ### Options & Flags
@@ -144,6 +144,8 @@ When `--api-key` is omitted, the CLI reads provider credentials from environment
 | `pexels` | `PEXELS_API_KEY` | Yes |
 | `unsplash` | `UNSPLASH_API_KEY` | Yes |
 | `flickr` | None | No |
+| `wikimedia` | None | No |
+| `openverse` | `OPENVERSE_API_KEY` | Optional |
 
 A universal fallback variable `STOCK_FETCHER_API_KEY` is also checked if a provider-specific variable is unset.
 

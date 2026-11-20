@@ -34,6 +34,8 @@ This guide details how to obtain free API credentials for supported stock image 
 | **Pixabay** | `PIXABAY_API_KEY` | Yes | 100 requests/minute | [pixabay.com/api/docs](https://pixabay.com/api/docs/) |
 | **Unsplash** | `UNSPLASH_API_KEY` | Yes | 50 requests/hour (Demo tier) | [unsplash.com/developers](https://unsplash.com/developers) |
 | **Flickr** | None | No | Uncapped public scraping | Zero-configuration |
+| **Wikimedia** | None | No | Uncapped MediaWiki open access | Zero-configuration |
+| **Openverse** | `OPENVERSE_API_KEY` | Optional | Open public access (Token for higher limits) | [api.openverse.org](https://api.openverse.org/) |
 
 ---
 

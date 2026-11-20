@@ -22,7 +22,7 @@ This document outlines planned technical milestones and architecture enhancement
 
 ## v0.4.0: Provider Coverage and Resiliency
 
-- **Extended Provider Ecosystem**: Add client integrations for Wikimedia Commons and Openverse.
+- [x] **Extended Provider Ecosystem**: Added client integrations for Wikimedia Commons (MediaWiki API) and Openverse (WordPress Openverse API) supporting async streaming, caching, and open-access queries.
 - **Deterministic Pagination Cursors**: Normalize page and offset cursors across heterogeneous provider interfaces.
 - **Adaptive Rate Limit Handling**: Implement exponential backoff and rate limit header parsing (`X-Ratelimit-Remaining`) to prevent burst throttling.
 

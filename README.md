@@ -72,6 +72,8 @@ flowchart TD
         Pixabay["PixabayClient (REST API)"]
         Unsplash["UnsplashClient (REST API)"]
         Flickr["FlickrClient (HTML Parser via BeautifulSoup)"]
+        Wikimedia["WikimediaClient (MediaWiki API)"]
+        Openverse["OpenverseClient (REST API)"]
     end
 
     App -->|"import ClientFactory"| Factory
@@ -83,6 +85,8 @@ flowchart TD
     Base --> Pixabay
     Base --> Unsplash
     Base --> Flickr
+    Base --> Wikimedia
+    Base --> Openverse
 ```
 
 ---
@@ -95,6 +99,8 @@ flowchart TD
 | **Pexels** | REST API | Required | `PEXELS_API_KEY` | ID, source, thumbnail, preview, original URL, photographer |
 | **Unsplash** | REST API | Required | `UNSPLASH_API_KEY` | ID, source, thumbnail, preview, original URL, description |
 | **Flickr** | HTML Scraper | None | None | ID, source, thumbnail, original URL, title |
+| **Wikimedia** | MediaWiki API | None | None | ID, source, thumbnail, original URL, title, author, license |
+| **Openverse** | REST API | Optional | `OPENVERSE_API_KEY` | ID, source, thumbnail, original URL, title, creator, license |
 
 ---
 
@@ -295,6 +301,7 @@ Configure provider API credentials using standard environment variables:
 | `PIXABAY_API_KEY` | Pixabay | API key issued from pixabay.com/api/docs |
 | `PEXELS_API_KEY` | Pexels | Authorization token issued from pexels.com/api |
 | `UNSPLASH_API_KEY` | Unsplash | Application Access Key issued from unsplash.com/developers |
+| `OPENVERSE_API_KEY` | Openverse | Optional OAuth Bearer token for extended rate limits (api.openverse.org) |
 | `STOCK_FETCHER_API_KEY` | Global Fallback | Shared fallback credential checked when provider-specific variables are unset |
 
 > [!TIP]

@@ -62,7 +62,7 @@ validate-links:
 	@$(PYTHON) -c "$$VALIDATE_LINKS_PY"
 
 test:
-	$(PYTHON) -m unittest discover -s tests -v
+	PYTHONPATH=src $(PYTHON) -m unittest discover -s tests -v
 
 check: lint format-check test validate-links
 

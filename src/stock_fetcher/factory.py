@@ -5,9 +5,11 @@ from typing import Dict, List, Optional, Type
 from .base import BaseFetcher
 from .cache import BaseCache
 from .clients.flickr import FlickrClient
+from .clients.openverse import OpenverseClient
 from .clients.pexels import PexelsClient
 from .clients.pixabay import PixabayClient
 from .clients.unsplash import UnsplashClient
+from .clients.wikimedia import WikimediaClient
 from .exceptions import AuthenticationError, ProviderNotFoundError
 from .models import StockImage
 
@@ -20,6 +22,8 @@ class ClientFactory:
         "pixabay": PixabayClient,
         "unsplash": UnsplashClient,
         "flickr": FlickrClient,
+        "wikimedia": WikimediaClient,
+        "openverse": OpenverseClient,
     }
 
     _env_keys: Dict[str, str] = {
@@ -27,6 +31,8 @@ class ClientFactory:
         "pixabay": "PIXABAY_API_KEY",
         "unsplash": "UNSPLASH_API_KEY",
         "flickr": "",
+        "wikimedia": "",
+        "openverse": "OPENVERSE_API_KEY",
     }
 
     @classmethod

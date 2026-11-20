@@ -424,7 +424,7 @@ for img in images:
 from stock_fetcher import ClientFactory
 
 async def main():
-    # Execute non-blocking parallel search across 4 engines
+    # Execute non-blocking parallel search across 6 engines
     results = await ClientFactory.asearch_all(
         term="nordic winter landscape",
         limit_per_provider=3

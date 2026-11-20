@@ -177,7 +177,7 @@ brew install stock-fetcher</code></pre>
           <tbody>
             <tr>
               <td><code>PROVIDER</code></td>
-              <td><code>pixabay</code>, <code>pexels</code>, <code>unsplash</code>, <code>flickr</code>, <code>all</code></td>
+              <td><code>pixabay</code>, <code>pexels</code>, <code>unsplash</code>, <code>flickr</code>, <code>wikimedia</code>, <code>openverse</code>, <code>all</code></td>
               <td>Target image provider or <code>all</code>.</td>
             </tr>
             <tr>
@@ -258,6 +258,51 @@ stock-fetcher keys</code></pre>
       <div class="callout callout-tip">
         <div class="callout-title">API Keys Setup</div>
         <p>To obtain free API keys for Pexels, Pixabay, and Unsplash and add them to your <code>~/.zshrc</code>, see our dedicated <a href="api_keys_guide.html">API Keys Guide</a>.</p>
+      </div>
+
+      <h2>Environment Configuration</h2>
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Environment Variable</th>
+              <th>Requirement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pexels</td>
+              <td><code>PEXELS_API_KEY</code></td>
+              <td>Required for Pexels searches</td>
+            </tr>
+            <tr>
+              <td>Pixabay</td>
+              <td><code>PIXABAY_API_KEY</code></td>
+              <td>Required for Pixabay searches</td>
+            </tr>
+            <tr>
+              <td>Unsplash</td>
+              <td><code>UNSPLASH_ACCESS_KEY</code></td>
+              <td>Required for Unsplash searches</td>
+            </tr>
+            <tr>
+              <td>Flickr</td>
+              <td><em>None</em></td>
+              <td>Ready out-of-the-box (public feeds)</td>
+            </tr>
+            <tr>
+              <td>Wikimedia Commons</td>
+              <td><em>None</em></td>
+              <td>Ready out-of-the-box (MediaWiki search API)</td>
+            </tr>
+            <tr>
+              <td>Openverse</td>
+              <td><code>OPENVERSE_API_KEY</code></td>
+              <td>Optional (public tier works without key; OAuth token increases rate limits)</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <h2>Unix Shell Pipeline Recipes</h2>

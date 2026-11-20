@@ -87,14 +87,16 @@ document.addEventListener("DOMContentLoaded", () => {
 [dim]Saved 4 items to ./downloads/alpine_lake_*.jpg[/dim]`,
 
     keys: `                           Environment API Key Status
-┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Provider  ┃ Variable         ┃ Status                                 ┃
-┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ pixabay   │ PIXABAY_API_KEY  │ [bold green]Configured (9481...e2)[/bold green]                 │
-│ pexels    │ PEXELS_API_KEY   │ [bold green]Configured (56a1...8f)[/bold green]                 │
-│ unsplash  │ UNSPLASH_API_KEY │ [bold green]Configured (gh78...z1)[/bold green]                 │
-│ flickr    │ -                │ [dim]Not Required (HTML Scraper)[/dim]      │
-└───────────┴──────────────────┴────────────────────────────────────────┘
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Provider  ┃ Variable          ┃ Status                                 ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ pixabay   │ PIXABAY_API_KEY   │ [bold green]Configured (9481...e2)[/bold green]                 │
+│ pexels    │ PEXELS_API_KEY    │ [bold green]Configured (56a1...8f)[/bold green]                 │
+│ unsplash  │ UNSPLASH_API_KEY  │ [bold green]Configured (gh78...z1)[/bold green]                 │
+│ flickr    │ -                 │ [dim]Not Required (HTML Scraper)[/dim]      │
+│ wikimedia │ -                 │ [dim]Not Required (MediaWiki API)[/dim]     │
+│ openverse │ OPENVERSE_API_KEY │ [green]Optional (Public Tier Active)[/green]         │
+└───────────┴───────────────────┴────────────────────────────────────────┘
 
 [dim]Audit passed: 3 API keys configured securely in shell environment.[/dim]`,
 
@@ -106,6 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
 │ pexels    │ REST API     │ Yes           │ PEXELS_API_KEY   │ [green]Ready[/green]                    │
 │ unsplash  │ REST API     │ Yes           │ UNSPLASH_API_KEY │ [green]Ready[/green]                    │
 │ flickr    │ HTML Scraper │ No            │ None             │ [green]Ready (No Key Required)[/green]  │
+│ wikimedia │ MediaWiki    │ No            │ None             │ [green]Ready (No Key Required)[/green]  │
+│ openverse │ REST API     │ Optional      │ OPENVERSE_API_KEY│ [green]Ready (Public Tier)[/green]      │
 └───────────┴──────────────┴───────────────┴━━━━━━━━━━━━━━━━━━┴━━━━━━━━━━━━━━━━━━━━━━━━━━┘`,
   };
 

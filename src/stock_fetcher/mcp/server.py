@@ -19,7 +19,7 @@ def search_images(provider: str, term: str, limit: int = 5, api_key: str = "") -
     """Search for copyright-free images using a specified provider.
 
     Args:
-        provider: The image provider ('pixabay', 'pexels', 'unsplash', 'flickr').
+        provider: The image provider ('pixabay', 'pexels', 'unsplash', 'flickr', 'wikimedia', 'openverse').
         term: Search query string (e.g. 'nature', 'city').
         limit: Maximum number of images to return (bounded between 1 and 30).
         api_key: The API key for the provider. If omitted, attempts to read from env vars.

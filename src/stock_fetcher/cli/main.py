@@ -52,6 +52,8 @@ PROVIDER_ENV_MAP: Dict[str, Optional[str]] = {
     "pexels": "PEXELS_API_KEY",
     "unsplash": "UNSPLASH_API_KEY",
     "flickr": None,
+    "wikimedia": None,
+    "openverse": "OPENVERSE_API_KEY",
 }
 
 
@@ -273,7 +275,7 @@ def _batch_download(results: List[Any], output_dir: str) -> None:
 def search(
     provider: str = typer.Argument(
         ...,
-        help="Target provider: 'pixabay', 'pexels', 'unsplash', 'flickr', or 'all'.",
+        help="Target provider: 'pixabay', 'pexels', 'unsplash', 'flickr', 'wikimedia', 'openverse', or 'all'.",
     ),
     term: str = typer.Argument(
         ...,
@@ -502,6 +504,14 @@ def list_providers() -> None:
             auth_req = "No"
             env_display = "None"
             status = "[green]Ready (No Key Required)[/green]"
+        elif p == "openverse":
+            auth_req = "Optional"
+            env_display = env_var
+            val = os.getenv(env_var) or os.getenv("STOCK_FETCHER_API_KEY")
+            if val:
+                status = "[green]Configured (Bearer Token)[/green]"
+            else:
+                status = "[green]Ready (Public Tier)[/green]"
         else:
             auth_req = "Yes"
             env_display = env_var
@@ -511,7 +521,13 @@ def list_providers() -> None:
             else:
                 status = "[yellow]Key Missing[/yellow]"
 
-        mode = "HTML Scraper" if p == "flickr" else "REST API"
+        if p == "flickr":
+            mode = "HTML Scraper"
+        elif p == "wikimedia":
+            mode = "MediaWiki API"
+        else:
+            mode = "REST API"
+
         table.add_row(p, mode, auth_req, env_display, status)
 
     console.print(table)
@@ -528,6 +544,13 @@ def check_keys() -> None:
     for p, env_var in PROVIDER_ENV_MAP.items():
         if env_var is None:
             table.add_row(p, "-", "[dim]Not Required[/dim]")
+        elif p == "openverse":
+            val = os.getenv(env_var) or os.getenv("STOCK_FETCHER_API_KEY")
+            if val:
+                masked = val[:4] + "..." + val[-2:] if len(val) > 6 else "***"
+                table.add_row(p, env_var, f"[green]Configured ({masked})[/green]")
+            else:
+                table.add_row(p, env_var, "[dim]Optional (Public Tier Active)[/dim]")
         else:
             val = os.getenv(env_var) or os.getenv("STOCK_FETCHER_API_KEY")
             if val:
