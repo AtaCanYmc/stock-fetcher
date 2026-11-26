@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/AtaCanYmc/stock-fetcher/compare/stock-fetcher-v0.4.0...stock-fetcher-v0.4.1) (2026-11-26)
+
+
+### Documentation
+
+* add PyPI version badge to README ([41c840a](https://github.com/AtaCanYmc/stock-fetcher/commit/41c840aa570e42e961dc41806070bc9208e4b0d6))
+* upgrade README diagrams with custom dark-themed SVGs ([efffee7](https://github.com/AtaCanYmc/stock-fetcher/commit/efffee7e281007e5ce46a9df7910d17943b0bac3))
+
 ## [0.4.0](https://github.com/AtaCanYmc/stock-fetcher/compare/stock-fetcher-v0.3.0...stock-fetcher-v0.4.0) (2026-11-20)
 
 
