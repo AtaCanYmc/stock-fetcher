@@ -62,40 +62,7 @@ Unified Python client, CLI utility, and Model Context Protocol (MCP) server for 
 
 The diagram below illustrates the ingestion pipeline, interface entry points, factory routing, and provider dispatch mechanics:
 
-```mermaid
-flowchart TD
-    subgraph Consumers["Entry Points"]
-        App["Python Application"]
-        CLI["Terminal CLI (stock-fetcher)"]
-        AI["AI Agent (Claude / Antigravity via MCP)"]
-    end
-
-    subgraph Core["Core Dispatch Layer"]
-        Factory["ClientFactory.get(provider, api_key)"]
-        Base["BaseFetcher Interface"]
-    end
-
-    subgraph Providers["Provider Implementations"]
-        Pexels["PexelsClient (REST API)"]
-        Pixabay["PixabayClient (REST API)"]
-        Unsplash["UnsplashClient (REST API)"]
-        Flickr["FlickrClient (HTML Parser via BeautifulSoup)"]
-        Wikimedia["WikimediaClient (MediaWiki API)"]
-        Openverse["OpenverseClient (REST API)"]
-    end
-
-    App -->|"import ClientFactory"| Factory
-    CLI -->|"parse arguments"| Factory
-    AI -->|"JSON-RPC (stdio)"| Factory
-
-    Factory -->|"instantiate"| Base
-    Base --> Pexels
-    Base --> Pixabay
-    Base --> Unsplash
-    Base --> Flickr
-    Base --> Wikimedia
-    Base --> Openverse
-```
+![Stock Fetcher Architecture](assets/diagrams/architecture.svg)
 
 ---
 
@@ -355,21 +322,7 @@ Configure provider API credentials using standard environment variables:
 
 All provider exceptions inherit from `StockFetcherError` located in `stock_fetcher.exceptions`:
 
-```mermaid
-classDiagram
-    class Exception
-    class StockFetcherError
-    class APIConnectionError
-    class RateLimitExceededError
-    class AuthenticationError
-    class ProviderNotFoundError
-
-    Exception <|-- StockFetcherError
-    StockFetcherError <|-- APIConnectionError
-    APIConnectionError <|-- RateLimitExceededError
-    StockFetcherError <|-- AuthenticationError
-    StockFetcherError <|-- ProviderNotFoundError
-```
+![Stock Fetcher Exception Hierarchy](assets/diagrams/exceptions.svg)
 
 ### Exception Catching Example
 
